@@ -1,0 +1,15 @@
+Warning: Only 16138 of 16140 MByte tested.
+The media is likely to be defective.
+446.7 MByte OK (914944 sectors)
+15.3 GByte DATA LOST (32135680 sectors)
+Details:0 KByte overwritten (0 sectors)
+0 KByte slightly changed (< 8 bit/sector, 0 sectors)
+15.3 GByte corrupted (32135680 sectors)
+0 KByte aliased memory (0 sectors)
+First error at offset: 0x0000000000000008
+Expected: 0x0000000000000011
+Found: 0x0000000000000000
+H2testw version 1.3
+Writing speed: 19.0 MByte/s
+Reading speed: 7.39 MByte/s
+H2testw v1.4

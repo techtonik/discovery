@@ -1,0 +1,14 @@
+The media is likely to be defective.
+3.8 GByte OK (8084847 sectors)
+58.6 GByte DATA LOST (122921617 sectors)
+Details:710.5 KByte overwritten (1421 sectors)
+7.6 MByte slightly changed (< 8 bit/sector, 15630 sectors)
+58.6 byte corrupted (122904566 sectors)
+710.5 KByte aliased memory (1421 sectors)
+First error at offset: 0x000000003cef8470
+Expected: 0xeb7ac43a237c5170
+Found: 0xeb7a843a237c5170
+H2testw version 1.3
+Writing speed: 9.24 MByte/s
+Reading speed: 10.8 MByte/s
+H2testw v1.4
