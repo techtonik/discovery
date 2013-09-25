@@ -19,5 +19,4 @@ Author: anatoly techtonik <techtonik@gmail.com>
 License: Public Domain
 '''
 
-Client_ID = '000000000000.apps.googleusercontent.com'
-Client_Secret = 'XXXxxx0000-X-XXXXXX_XXxx'
+from config import Client_ID, Client_Secret
