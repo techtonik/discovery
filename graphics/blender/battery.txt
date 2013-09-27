@@ -1,7 +1,12 @@
-level 0 tutorial on rendering battery in Blender
+--[ ] level 0 tutorial on rendering battery in Blender --
 
 [ ] make navigation cheat cheet ready
 [ ] exact size in Blender
 [ ] relative size in Blender
 [ ] battery dimensions
      N-type 11.2mm x 29.9mm (27.5mm/28.7mm to back)
+
+
+http://www.blendswap.com/blends/view/55883
+Outdated tutorial (to use only when completely stuck):
+http://cgcookie.com/blender/2011/05/21/creating-a-battery-in-blender-and-luxrender/
