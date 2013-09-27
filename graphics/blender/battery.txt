@@ -6,6 +6,12 @@
 [ ] battery dimensions
      N-type 11.2mm x 29.9mm (27.5mm/28.7mm to back)
 
+[ ] multiple textures - GIMP
+  [ ] Duracell
+  [ ] nx
+  [ ] ...
+  [ ] yours?
+
 
 http://www.blendswap.com/blends/view/55883
 Outdated tutorial (to use only when completely stuck):
