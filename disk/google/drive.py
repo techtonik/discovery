@@ -19,4 +19,4 @@ Author: anatoly techtonik <techtonik@gmail.com>
 License: Public Domain
 '''
 
-from config import Client_ID, Client_Secret
+from config import CLIENT_ID, CLIENT_SECRET
