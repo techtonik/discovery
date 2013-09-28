@@ -157,7 +157,15 @@ except ImportError as exc:
     if 'httplib2' not in exc.message:
       speccy.pop('httplib2')
 
-    wgetsecure(LOOT, speccy.values())
+    for spec in speccy.values():
+      filename = spec[0]
+      print(".[%s]" % filename)
+      if os.path.exists(LOOT + filename):
+        print("..already downloaded to " + filename)
+        print("..checking")
+      else:
+        print("..downloading to " + filename)
+      wgetsecure(LOOT, [spec], quiet=True)
      
 
   # [ ] create .locally if not exists
