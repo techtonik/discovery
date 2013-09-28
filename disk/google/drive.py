@@ -108,6 +108,50 @@ def wgetsecure(targetdir, filespec, quiet=False):
         raise
 
 # ---[ /download utils ]---
+
+# extract_zip is patched version
+#
+# * improved comments
+# * inserted prints
+# * fix4arhives without entries for dirs
+
+def extract_zip(zippath, subdir, target):
+  '''
+  Extract entries from `subdir` of `zipfile` into
+  `target`/ directory.
+
+  [ ] check about archives without dir entries
+
+  [ ] security check (overwrite file in parent dir)
+  '''
+
+  from os.path import join, exists
+  import shutil
+  import zipfile
+  zf = zipfile.ZipFile(zippath)
+
+  for entry in zf.namelist():
+    if subdir:
+      if not entry.startswith(subdir + '/'):
+        continue
+      else:
+        outfilename = join(target, entry.replace(subdir + '/', ''))
+    else:
+      outfilename = join(target, entry)
+
+    if outfilename.endswith('/'):  # directory
+      continue
+    else:
+      filedir = os.path.dirname(outfilename)
+      if filedir and not exists(filedir):
+        os.makedirs(filedir)
+    outfile = open(outfilename, "wb")
+    infile = zf.open(entry)
+    shutil.copyfileobj(infile, outfile)
+    outfile.close()
+    infile.close()
+  zf.close()
+
 # --[/cut locally.py]--
 
 
@@ -159,18 +203,32 @@ except ImportError as exc:
 
     for spec in speccy.values():
       filename = spec[0]
+      filepath = LOOT + filename
       print(".[%s]" % filename)
-      if os.path.exists(LOOT + filename):
-        print("..already downloaded to " + filename)
+      if os.path.exists(filepath):
+        print("..already downloaded to " + filepath)
         print("..checking")
       else:
-        print("..downloading to " + filename)
+        print("..downloading to " + filepath)
       wgetsecure(LOOT, [spec], quiet=True)
-     
 
-  # [ ] create .locally if not exists
-  # [ ] wgetsecure(.locally, speccy)
-  
+      # decompressing
+      print('..decompressing')
+      extract_zip(filepath, '', LOOT)
+      
+    # patching sys.path
+    #  for httplib2 dire strip .zip name
+    dirname = speccy['httplib2'][0].rsplit('.', 1)[0]
+    dirname = LOOT + dirname + '/python' + sys.version[0]
+    sys.path.insert(0, dirname)
+    #  for apiclient
+    dirname = speccy['apiclient'][0].rsplit('.', 1)[0]
+    dirname = LOOT + dirname
+    sys.path.insert(0, dirname)
+
+    import httplib2
+    import apiclient
+
 # ---[ /bootstrap ]---
 
 # ---[ boilerplate from quickstart.py example ]---
