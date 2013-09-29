@@ -164,13 +164,13 @@ except ImportError as exc:
   # this creates .locally/ subdirectory and sets few global
   # variables for convenience:
   #
-  #   ROOT  - absolute path to this dir
+  #   ROOT  - absolute path to this dir, ends with /
   #   LOOT  - absolute path to the .locally/ subdir, added to
   #           to sys.path, always ends with /
 
   import os
   import sys
-  ROOT = os.path.abspath(os.path.dirname(__file__))
+  ROOT = os.path.abspath(os.path.dirname(__file__)) + '/'
   LOOT = os.path.join(ROOT, '.locally/')
 
   # try to bootstrap from .locally/
