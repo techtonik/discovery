@@ -213,8 +213,14 @@ except ImportError as exc:
       wgetsecure(LOOT, [spec], quiet=True)
 
       # decompressing
-      print('..decompressing')
-      extract_zip(filepath, '', LOOT)
+      #  for these dependencies unpacked dir
+      #  is equal to .zip name without extension
+      checkdir = spec[0].rsplit('.', 1)[0]
+      if os.path.exists(LOOT + checkdir):
+        print('..not decompressing (checkdir exists)')
+      else:
+        print('..decompressing')
+        extract_zip(filepath, '', LOOT)
       
     # patching sys.path
     #  for httplib2 dire strip .zip name
