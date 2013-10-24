@@ -262,41 +262,41 @@ if __name__ == '__main__':
 
   FILENAME = sys.argv[2]
 
-# Run through the OAuth flow and retrieve credentials
-flow = OAuth2WebServerFlow(CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE, REDIRECT_URI)
-authorize_url = flow.step1_get_authorize_url()
-print('You need to get credentials from the following link:')
-print(authorize_url)
-print('Would you like to open browser automatically? [Yn]', end='')
-answer = raw_input()
-if len(answer.strip()) == 0 or answer.strip().lower() == 'y':
-  import webbrowser
-  webbrowser.open(authorize_url, new=2)
+  # Run through the OAuth flow and retrieve credentials
+  flow = OAuth2WebServerFlow(CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE, REDIRECT_URI)
+  authorize_url = flow.step1_get_authorize_url()
+  print('You need to get credentials from the following link:')
+  print(authorize_url)
+  print('Would you like to open browser automatically? [Yn]', end='')
+  answer = raw_input()
+  if len(answer.strip()) == 0 or answer.strip().lower() == 'y':
+    import webbrowser
+    webbrowser.open(authorize_url, new=2)
 
-code = raw_input('Enter verification code: ').strip()
-credentials = flow.step2_exchange(code)
+  code = raw_input('Enter verification code: ').strip()
+  credentials = flow.step2_exchange(code)
 
-# Create an httplib2.Http object and authorize it with our credentials
-http = httplib2.Http()
-http = credentials.authorize(http)
+  # Create an httplib2.Http object and authorize it with our credentials
+  http = httplib2.Http()
+  http = credentials.authorize(http)
 
-drive_service = build('drive', 'v2', http=http)
+  drive_service = build('drive', 'v2', http=http)
 
-# Insert a file
-#  Prepare for upload and detect mime type
-#  (files without mime type are not accepted - see issue 310)
-#  https://code.google.com/p/google-api-python-client/issues/detail?id=310
-media_body = MediaFileUpload(FILENAME, resumable=True)
-if media_body.mimetype() == None:
-  media_body = MediaFileUpload(FILENAME,
-      mimetype='application/octet-stream', resumable=True)
+  # Insert a file
+  #  Prepare for upload and detect mime type
+  #  (files without mime type are not accepted - see issue 310)
+  #  https://code.google.com/p/google-api-python-client/issues/detail?id=310
+  media_body = MediaFileUpload(FILENAME, resumable=True)
+  if media_body.mimetype() == None:
+    media_body = MediaFileUpload(FILENAME,
+        mimetype='application/octet-stream', resumable=True)
 
-body = {
-  'title': osp.basename(FILENAME),
-}
+  body = {
+    'title': osp.basename(FILENAME),
+  }
 
-file = drive_service.files().insert(body=body, media_body=media_body).execute()
-pprint.pprint(file)
+  file = drive_service.files().insert(body=body, media_body=media_body).execute()
+  pprint.pprint(file)
 
 # ---[ /boilerplate ]---
 
