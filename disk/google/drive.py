@@ -241,7 +241,6 @@ except ImportError as exc:
 # ---[ /bootstrap ]---
 
 
-FILENAME = 'Save_the_COD'
 # ---[ boilerplate from quickstart.py example ]---
 import httplib2
 import pprint
@@ -255,6 +254,13 @@ OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'
 
 # Redirect URI for installed apps
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
+
+if __name__ == '__main__':
+  # [x] command line usage: drive.py upload <filename>
+  if len(sys.argv[1:]) < 2 or sys.argv[1] != 'upload':
+    sys.exit('Usage: drive.py upload <filename>')
+
+  FILENAME = sys.argv[2]
 
 # Run through the OAuth flow and retrieve credentials
 flow = OAuth2WebServerFlow(CLIENT_ID, CLIENT_SECRET, OAUTH_SCOPE, REDIRECT_URI)
@@ -290,6 +296,3 @@ pprint.pprint(file)
 # ---[ /boilerplate ]---
 
 
-if __name__ == '__main__':
-  # [ ] command line usage: drive.py upload <filename>
-  pass
