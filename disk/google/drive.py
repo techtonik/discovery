@@ -285,9 +285,7 @@ drive_service = build('drive', 'v2', http=http)
 # Insert a file
 media_body = MediaFileUpload(FILENAME, mimetype='text/plain', resumable=True)
 body = {
-  'title': 'My document',
-  'description': 'A test document',
-  'mimeType': 'text/plain'
+  'title': osp.basename(FILENAME),
 }
 
 file = drive_service.files().insert(body=body, media_body=media_body).execute()
