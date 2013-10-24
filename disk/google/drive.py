@@ -283,7 +283,14 @@ http = credentials.authorize(http)
 drive_service = build('drive', 'v2', http=http)
 
 # Insert a file
-media_body = MediaFileUpload(FILENAME, mimetype='text/plain', resumable=True)
+#  Prepare for upload and detect mime type
+#  (files without mime type are not accepted - see issue 310)
+#  https://code.google.com/p/google-api-python-client/issues/detail?id=310
+media_body = MediaFileUpload(FILENAME, resumable=True)
+if media_body.mimetype() == None:
+  media_body = MediaFileUpload(FILENAME,
+      mimetype='application/octet-stream', resumable=True)
+
 body = {
   'title': osp.basename(FILENAME),
 }
