@@ -1,3 +1,5 @@
+/.locally/
+\.pyc$
+
 h2testw.exe
 ^disk/google/config\.py$
-/.locally/
