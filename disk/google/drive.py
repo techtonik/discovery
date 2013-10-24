@@ -12,8 +12,8 @@ https://developers.google.com/drive/quickstart-python
   5. Client ID Settings section:
     1. Installed application
     2. Other
-  5. From the API Access page, you'll need Client ID
-     and Client Secret info.
+  6. From the API Access page get Client ID and
+     Client Secret
   
 Author: anatoly techtonik <techtonik@gmail.com>
 License: Public Domain
@@ -159,6 +159,7 @@ try:
   import httplib2
   import apiclient
 except ImportError as exc:
+  print('---[Initialize]---')
   # --- bootstrap .locally ---
   #
   # this creates .locally/ subdirectory and sets few global
@@ -234,6 +235,8 @@ except ImportError as exc:
 
     import httplib2
     import apiclient
+
+    print('---[Start]---')
 
 # ---[ /bootstrap ]---
 
