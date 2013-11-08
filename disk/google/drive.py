@@ -20,7 +20,10 @@ License: Public Domain
 '''
 from __future__ import print_function
 
-from config import CLIENT_ID, CLIENT_SECRET
+try:
+  from config import CLIENT_ID, CLIENT_SECRET
+except ImportError:
+  print('Error: Please create config.py with client ID and secret')
 
 
 # ---[ bootstrap section ]---
