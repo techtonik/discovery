@@ -202,7 +202,7 @@ except ImportError as exc:
         '4e82bbc87e17acf70606ba45b379ea6c5095dd63 97080',
         'https://google-api-python-client.googlecode.com/files/google-api-python-client-1.2.zip'),
     }
-    if 'httplib2' not in exc.message:
+    if 'httplib2' not in str(exc):
       speccy.pop('httplib2')
 
     for spec in speccy.values():
