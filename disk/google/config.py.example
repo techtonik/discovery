@@ -1,2 +1,2 @@
-Client_ID = '000000000000.apps.googleusercontent.com'
-Client_Secret = 'XXXxxx0000-X-XXXXXX_XXxx'
+CLIENT_ID = '000000000000.apps.googleusercontent.com'
+CLIENT_SECRET = 'XXXxxx0000-X-XXXXXX_XXxx'
