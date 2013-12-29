@@ -3,7 +3,8 @@ content that can be securely run on your site.
 Security is achieved by wrapping contents in <iframe>.
 
 
-=== Tutorial: Making Flattr Gadget ===
+Tutorial: Making Flattr Gadget
+==============================
 
 Flattr is a web service with buttons for the third
 party site. The simplest way to insert the button is
@@ -57,3 +58,13 @@ https://developers.google.com/gadgets/docs/gs
          ]]>
       </Content> 
     </Module>
+
+To test it, save it into .xml file, upload somewhere
+and load in from site that supports gadgets, such as
+Google Code. For example, the code to load the current
+version of flattr.xml on GC from this repository: 
+
+    <wiki:gadget url="https://bitbucket.org/techtonik/discovery/raw/ed9b95ad8fde9bdf5b0e4ba8fd3f0832852c5a18/web/gadgets/flattr.xml"/>
+
+This renders 300x150 box with <h2> title element above
+it if inserted in Google Code wiki page.
