@@ -5,7 +5,6 @@ anatoly techtonik <techtonik@gmail.com>
 -->
 
 <Module>
-  <ModulePrefs title="Small Flattr button with counter." /> 
   <Content type="html">
 <![CDATA[ 
    <script id='fbhpwmv'>(function(i){
