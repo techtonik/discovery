@@ -10,11 +10,11 @@ Flattr is a web service with buttons for the third
 party site. The simplest way to insert the button is
 to use the following HTML code:
 
-  <a href="https://flattr.com/submit/auto?user_id=techtonik&url=https%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
-     target="_blank">
-    <img src="//api.flattr.com/button/flattr-badge-large.png"
-         alt="Flattr this" title="Flattr this" border="0"/>
-  </a>
+    <a href="https://flattr.com/submit/auto?user_id=techtonik&url=https%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
+       target="_blank">
+      <img src="//api.flattr.com/button/flattr-badge-large.png"
+           alt="Flattr this" title="Flattr this" border="0"/>
+    </a>
 
 This loads 93x20 image that says "Flattr this!" from
 api.flattr.com website. When you click the image, it
@@ -32,7 +32,7 @@ allow to embed JavaScript into project pages.
 So, we need to create a Gadget. The original
 JavaScript looks like this:
 
-   <script id='fbhpwmv'>(function(i){
+    <script id='fbhpwmv'>(function(i){
      var f,s=document.getElementById(i);
      f=document.createElement('iframe');
      f.src='//api.flattr.com/button/view/?uid=techtonik&button=compact&url=http%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F';
@@ -41,7 +41,7 @@ JavaScript looks like this:
      f.width=110;
      f.style.borderWidth=0;
      s.parentNode.insertBefore(f,s);})('fbhpwmv');
-   </script>
+    </script>
 
 It creates <iframe> element that loads HTML (not
 image) from api.flattr.com server.
