@@ -1,9 +1,23 @@
-<?xml version="1.0" encoding="UTF-8" ?> 
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file is put into Public Domain by
+anatoly techtonik <techtonik@gmail.com>
+-->
+
 <Module>
-  <ModulePrefs title="hello world example" /> 
+  <ModulePrefs title="Small Flattr button with counter." /> 
   <Content type="html">
-     <![CDATA[ 
-       Hello, world!
-     ]]>
+<![CDATA[ 
+   <script id='fbhpwmv'>(function(i){
+     var f,s=document.getElementById(i);
+     f=document.createElement('iframe');
+     f.src='//api.flattr.com/button/view/?uid=techtonik&button=compact&url=http%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F';
+     f.title='Flattr';
+     f.height=20;
+     f.width=110;
+     f.style.borderWidth=0;
+     s.parentNode.insertBefore(f,s);})('fbhpwmv');
+   </script>
+]]>
   </Content> 
 </Module>
