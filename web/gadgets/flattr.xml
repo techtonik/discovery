@@ -6,14 +6,9 @@ anatoly techtonik <techtonik@gmail.com>
 
 <Module>
   <ModulePrefs/>
-  <Content type="html">
-<![CDATA[ 
-   <iframe
-     src="//api.flattr.com/button/view/?uid=techtonik&button=compact&url=http%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
-     height="20"
-     width="110"
-     style="border-width: 0px;">
-   </iframe>
-]]>
+  <Content type="url"
+    href="//api.flattr.com/button/view/?uid=techtonik&button=compact&url=http%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
+    preferred_height="20"
+    preferred_width="110">
   </Content> 
 </Module>
