@@ -84,7 +84,7 @@ specifying URL instead of HTML.
     <Module>
       <ModulePrefs/>
       <Content type="url"
-        href="//api.flattr.com/button/view/?uid=techtonik&amp;button=compact&amp;url=http%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
+        href="//api.flattr.com/button/view/?uid=techtonik&amp;button=compact&amp;url=https%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
         preferred_height="20"
         preferred_width="110">
       </Content> 
