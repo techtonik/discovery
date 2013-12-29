@@ -10,9 +10,8 @@ anatoly techtonik <techtonik@gmail.com>
 <![CDATA[ 
    <iframe
      src="//api.flattr.com/button/view/?uid=techtonik&button=compact&url=http%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
-     title="Flattr"
-     height=20
-     width=110
+     height="20"
+     width="110"
      style="border-width: 0px;">
    </iframe>
 ]]>

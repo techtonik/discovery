@@ -67,4 +67,13 @@ version of flattr.xml on GC from this repository:
     <wiki:gadget url="https://bitbucket.org/techtonik/discovery/raw/ed9b95ad8fde9bdf5b0e4ba8fd3f0832852c5a18/web/gadgets/flattr.xml"/>
 
 This renders 300x150 box with <h2> title element above
-it if inserted in Google Code wiki page.
+it if inserted in Google Code wiki page. To remove
+border around it and shrink size, you need to add more
+attributes to the element:
+
+    <wiki:gadget border="0" width="110" height="20" url="https://bitbucket.org/techtonik/discovery/raw/e934594350c62806b4ceb213a67eb4c0402cf129/web/gadgets/flattr.xml"/>
+
+Note that for this to work in Google Code, this should
+be written as one line tag. This URL changed to remove
+JavaScript from Gadget, which makes it faster to load.
+
