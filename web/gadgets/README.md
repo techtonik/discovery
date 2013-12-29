@@ -77,3 +77,15 @@ Note that for this to work in Google Code, this should
 be written as one line tag. This URL changed to remove
 JavaScript from Gadget, which makes it faster to load.
 
+It is possible to simplify Gadget code even more by
+specifying URL instead of HTML.
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <Module>
+      <ModulePrefs/>
+      <Content type="url"
+        href="//api.flattr.com/button/view/?uid=techtonik&amp;button=compact&amp;url=http%3A%2F%2Fcode.google.com%2Fp%2Fpython-patch%2F"
+        preferred_height="20"
+        preferred_width="110">
+      </Content> 
+    </Module>
