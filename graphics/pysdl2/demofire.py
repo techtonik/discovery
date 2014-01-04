@@ -32,6 +32,13 @@ except ImportError:
 #   [ ] output  - fill with pixels
 #   [ ] input   - wait (for completion or until times comes)
 #   [ ] process - recalculate pixel values
+#
+# [ ] max FPS mode with measuring
+# [ ] fixed FPS mode (25)
+#   ---
+#   [ ] measure CPU load for both
+#   [ ] output results after window closed
+#     [ ] optional mode with rendering on screen
 # /--
 
 
