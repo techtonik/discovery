@@ -56,11 +56,15 @@ window.show()
 
 # --- define world ---
 
+class Scene(object):
+  def __init__(self, title):
+    self.title = title
+
 class CyclicWorld(object):
-  """world of strings"""
+  """world of scenes"""
 
   def __init__(self, items):
-    """every item is a string that is also a scene name"""
+    """every item is a scene"""
     if not items:
       raise ValueError("At least one element is required")
     self.items = items
@@ -68,14 +72,15 @@ class CyclicWorld(object):
     self.item = items[0]
 
   def cycle(self, count=1):
-    """Count is any amount and can be negative"""
+    """`count` is any amount and can be negative"""
     self.index += count
     if self.index < 0 or self.index > len(self.items)-1:
       # modulo is a good operator for cycling in bounds
       self.index = self.index % len(self.items)
     self.item = self.items[self.index]
 
-world = CyclicWorld('Yo! Hello, World of HellFire.'.split())
+scenes = [Scene(name) for name in 'Yo! Hello, World of HellFire.'.split()]
+world = CyclicWorld(scenes)
 
 # --/ define world ---
 
@@ -88,7 +93,7 @@ print(" .. ESC quits")
 running = True
 while running:
   # [x] output - draw world
-  window.title = world.item
+  window.title = world.item.title
   # [x] input
   events = lib.get_events()
   for e in events:
