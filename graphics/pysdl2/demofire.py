@@ -24,8 +24,9 @@ except ImportError:
   import bootstrap
   import sdl2
 
+
 # ---
-# * create window of size ~500x100
+# [x] create window of size ~500x100
 #
 # * fill with pixels (output)
 # * wait for completion (input)
@@ -34,8 +35,11 @@ except ImportError:
 # /--
 
 
-
 import sdl2.ext as lib
 
 lib.init()
 
+window = lib.Window('HellFire', size=(500, 100))
+window.show()
+
+# window doesn't persist, because there is no game loop
