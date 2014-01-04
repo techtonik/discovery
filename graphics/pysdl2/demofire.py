@@ -37,10 +37,16 @@ except ImportError:
 
 import sdl2.ext as lib
 
-lib.init()
+lib.init()  # --- init ---
 
 window = lib.Window('HellFire', size=(500, 100))
 window.show()
 
+
+# --- main event (game) loop ---
 # test event loop to see the window
 lib.TestEventProcessor().run(window)
+# /-- main event (game) loop ---
+
+
+lib.quit()  # /-- init ---
