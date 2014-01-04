@@ -53,9 +53,43 @@ window = lib.Window('HellFire', size=(500, 100))
 window.show()
 
 
+
+# --- define world ---
+
+class CyclicWorld(object):
+  """world of strings"""
+
+  def __init__(self, items):
+    """every item is a string that is also a scene name"""
+    if not items:
+      raise ValueError("At least one element is required")
+    self.items = items
+    self.index = 0
+    self.item = items[0]
+
+  def cycle(self, count=1):
+    """Count is any amount and can be negative"""
+    self.index += count
+    if self.index < 0 or self.index > len(self.items)-1:
+      # modulo is a good operator for cycling in bounds
+      self.index = self.index % len(self.items)
+    self.item = self.items[self.index]
+
+world = CyclicWorld('Yo! Hello, World of HellFire.'.split())
+
+# --/ define world ---
+
+
 # --- main event (game) loop ---
+
+print(" .. LEFT/RIGHT cycle through scenes")
+print(" .. ESC quits")
+
 running = True
 while running:
+  # [x] output - draw world
+  window.title = world.item
+  # [x] input
   events = lib.get_events()
   for e in events:
     if e.type == sdl2.SDL_QUIT:
@@ -65,8 +99,13 @@ while running:
       if e.key.keysym.sym == sdl2.SDLK_ESCAPE:
         running = False
         break
+      if e.key.keysym.sym == sdl2.SDLK_LEFT:
+        world.cycle(-1)
+      if e.key.keysym.sym == sdl2.SDLK_RIGHT:
+        world.cycle(1)
 
   window.refresh()
+
 # /-- main event (game) loop ---
 
 
