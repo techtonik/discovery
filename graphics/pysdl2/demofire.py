@@ -44,8 +44,14 @@ window.show()
 
 
 # --- main event (game) loop ---
-# test event loop to see the window
-lib.TestEventProcessor().run(window)
+running = True
+while running:
+  events = lib.get_events()
+  for e in events:
+    if e.type == sdl2.SDL_QUIT:
+      running = False
+      break
+  window.refresh()
 # /-- main event (game) loop ---
 
 
