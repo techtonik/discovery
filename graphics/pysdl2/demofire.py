@@ -58,6 +58,11 @@ while running:
     if e.type == sdl2.SDL_QUIT:
       running = False
       break
+    if e.type == sdl2.SDL_KEYDOWN:
+      if e.key.keysym.sym == sdl2.SDLK_ESCAPE:
+        running = False
+        break
+
   window.refresh()
 # /-- main event (game) loop ---
 
