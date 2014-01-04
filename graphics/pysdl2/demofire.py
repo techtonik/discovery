@@ -16,6 +16,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
+__version__ = "0.1"
 
 try:
   import sdl2
@@ -24,6 +25,8 @@ except ImportError:
   import bootstrap
   import sdl2
 
+
+print("---------------------------[ demofire %s ]---" % __version__)
 
 # ---
 # [x] create window of size ~500x100
@@ -68,3 +71,5 @@ while running:
 
 
 lib.quit()  # /-- init ---
+
+print("---------[ techtonik // rainforce // 2014 ]---")
