@@ -28,10 +28,10 @@ except ImportError:
 # ---
 # [x] create window of size ~500x100
 #
-# * fill with pixels (output)
-# * wait for completion (input)
-# * update data (process)
-# * repeat
+# [ ] create game loop
+#   [ ] output  - fill with pixels
+#   [ ] input   - wait (for completion or until times comes)
+#   [ ] process - recalculate pixel values
 # /--
 
 
@@ -42,4 +42,5 @@ lib.init()
 window = lib.Window('HellFire', size=(500, 100))
 window.show()
 
-# window doesn't persist, because there is no game loop
+# test event loop to see the window
+lib.TestEventProcessor().run(window)
