@@ -10,35 +10,33 @@ Version 1
 
 GfxTablet app sends UDP packets to port 40118 of the destination host.
 
-Packet structure:
+Packet structure, uses network byte order (big endian):
 
-  9  octets   "GfxTablet"
-  1  ushort   version number
-  1  ushort   type:
-              0 motion event (hovering)
-              1 button event (finger, pen etc. touches surface)
+  9  bytes    "GfxTablet"
+  1  word     version number
+  1  byte     type:
+                0 motion event (hovering)
+                1 button event (finger, pen etc. touches surface)
 
-  1  ushort   x (using full range: 0..65535)
-  1  ushort   y (using full range: 0..65535)
-  1  ushort   pressure (using full range 0..65535, 32768 == pressure 1.0f on Android device)
+  1  word     x (using full range: 0..65535)
+  1  word     y (using full range: 0..65535)
+  1  word     pressure (using full range 0..65535, 32768 == pressure 1.0f on Android device)
 
-when type == button event:
+  when type == button event:
   1  byte     number of button, starting with 0
   1  byte     button status:
-              0 button is down
-              1 button is up
-
+                0 button is down
+                1 button is up
 
 Comments:
 
  - use netcat to test server `nc -u 127.0.0.1 40118`
- - not specified, but current version sends ushorts as little indians
 
 """
 
 __author__  = "anatoly techtonik <techtonik@gmail.com>"
 __license__ = "MIT/Public Domain/CC0"
-__version__ = "1.0.alpha1"
+__version__ = "1.0.alpha2"
 
 
 # --- python helpers ---
