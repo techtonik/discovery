@@ -28,6 +28,12 @@ when type == button event:
               0 button is down
               1 button is up
 
+
+Comments:
+
+ - use netcat to test server `nc -u 127.0.0.1 40118`
+ - not specified, but current version sends ushorts as little indians
+
 """
 
 __author__  = "anatoly techtonik <techtonik@gmail.com>"
@@ -93,10 +99,11 @@ class Processor(object):
 
   def process(self, b):  # b is a binary string
     self.count += 1
-    if not b.startswith('GfxTable'):
+    if not b.startswith('GfxTablet'):
       echo('#%3s  (discarded) invalid signature' % self.count)
       return
-
+    echo('#%3s  (accepted) (%s bytes)' % (self.count, len(b)))
+    
 # --- /parsing ---
 
 
