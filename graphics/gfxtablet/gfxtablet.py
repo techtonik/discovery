@@ -13,20 +13,20 @@ GfxTablet app sends UDP packets to port 40118 of the destination host.
 Packet structure, uses network byte order (big endian):
 
   9  bytes    "GfxTablet"
-  1  word     version number
+  2  bytes    version number
   1  byte     type:
                 0 motion event (hovering)
-                1 button event (finger, pen etc. touches surface)
+                1 control event (finger, pen etc. touches surface)
 
-  1  word     x (using full range: 0..65535)
-  1  word     y (using full range: 0..65535)
-  1  word     pressure (using full range 0..65535, 32768 == pressure 1.0f on Android device)
+  2  bytes    x (using full range: 0..65535)
+  2  bytes    y (using full range: 0..65535)
+  2  bytes    pressure (using full range 0..65535, 32768 == pressure 1.0f on Android device)
 
-  when type == button event:
-  1  byte     number of button, starting with 0
-  1  byte     button status:
-                0 button is down
-                1 button is up
+  when type == control event:
+  1  byte     number of control, starting with 0
+  1  byte     control status:
+                0 control is inactive
+                1 control is active
 
 Comments:
 
