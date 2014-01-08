@@ -14,9 +14,9 @@ Packet structure, uses network byte order (big endian):
 
   9  bytes    "GfxTablet"
   2  bytes    version number
-  1  byte     type:
-                0 motion event (hovering)
-                1 control event (finger, pen etc. touches surface)
+  1  byte     event:
+                0 motion (hovering)
+                1 control (finger, pen etc. touches surface)
 
   2  bytes    x (using full range: 0..65535)
   2  bytes    y (using full range: 0..65535)
@@ -109,10 +109,10 @@ class Packet(ctypes.BigEndianStructure):
                            # [ ] ability to output as hex
                            # [ ] to int
                            # [ ] to version tuple
-    # 1  byte type:
+    # 1  byte event:
     #         0 motion event (hovering)
     #         1 control event (finger, pen etc. touches surface)
-    ('type',    ENUM),     # word
+    ('event',   ENUM),     # word
                            # [ ] to type string
                            # [ ] to some corresponding object
     ('x', INT),  # WORD, using full range: 0..65535
@@ -120,9 +120,9 @@ class Packet(ctypes.BigEndianStructure):
     ('pressure', INT),  # WORD, full range 0..65535,
                         # 32768 == pressure 1.0f on Android device
 
-    # when type == control event,
+    # when event == control event,
     ('control', BYTE),    # number of control, starting with 0
-    ('cstate', BYTE),     # control status - 0 off, 1 active
+    ('state', BYTE),     # control status - 0 off, 1 active
   ]
 
   def parse(self, bdata):
@@ -150,13 +150,13 @@ class Processor(object):
     self.packet.parse(b)
     if self.packet.version != 1:
       echo('  warn: only version 1 of protocol is supported')
-    msg2 = 'type:%s  x,y:%s,%s  pressure:%s' % (self.packet.type,
+    msg2 = 'event:%s  x,y:%s,%s  pressure:%s' % (self.packet.event,
                self.packet.x, self.packet.y, self.packet.pressure)
     if len(b) == len(self.packet):
-      state = 'active' if self.packet.cstate else 'inactive'
-      msg2 += '  control:%s %s' % (self.packet.control,
-                                   state)
+      state = 'active' if self.packet.state else 'inactive'
+      msg2 += '  control:%s %s' % (self.packet.control, state)
     echo(msg1 + '  ' + msg2)
+    return self.packet
     
 # --- /parsing ---
 
@@ -167,5 +167,19 @@ ip = getmyips()[-1]
 print('GxfTablet Server IP: %s' % ip)
 s = UDPSocketStream()
 p = Processor()
+
+try:
+  import autopy
+except ImportError:
+  print('..autopy is not installed, mouse control is disabled')
+
 while True:
-  p.process(s.read(1024))
+  res = p.process(s.read(1024))
+  if autopy:
+    # normalize screen coordinates
+    width, height = autopy.screen.get_size()
+    x, y = res.x*width//32768, res.y*height//32768
+    #print x,y
+    autopy.mouse.move(x, y)
+    if res.event == 1 and res.state == 1:
+      autopy.mouse.click()
