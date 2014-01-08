@@ -25,7 +25,7 @@ Packet structure, uses network byte order (big endian):
   when type == control event:
   1  byte     number of control, starting with 0
   1  byte     control status:
-                0 control is inactive
+                0 control is off
                 1 control is active
 
 Comments:
@@ -36,7 +36,7 @@ Comments:
 
 __author__  = "anatoly techtonik <techtonik@gmail.com>"
 __license__ = "MIT/Public Domain/CC0"
-__version__ = "1.0.alpha2"
+__version__ = "1.0.beta1"
 
 
 # --- python helpers ---
@@ -91,16 +91,72 @@ class UDPSocketStream(object):
 
 # --- packet processing ---
 
+import ctypes
+
+CHAR = ctypes.c_ubyte
+BYTE = ctypes.c_ubyte
+WORD = ctypes.c_ushort  # two bytes
+ENUM = ctypes.c_ubyte   # one byte, fixed set of values
+INT  = ctypes.c_ushort  # two bytes, integer value
+
+class Packet(ctypes.BigEndianStructure):
+  _pack_ = 1
+  _fields_ = [
+    # 9  bytes   "GfxTablet"
+    ('magic',   CHAR*9),   # string(9), [ ] ability to output .value
+    # 2  bytes   version number
+    ('version', WORD),     # word
+                           # [ ] ability to output as hex
+                           # [ ] to int
+                           # [ ] to version tuple
+    # 1  byte type:
+    #         0 motion event (hovering)
+    #         1 control event (finger, pen etc. touches surface)
+    ('type',    ENUM),     # word
+                           # [ ] to type string
+                           # [ ] to some corresponding object
+    ('x', INT),  # WORD, using full range: 0..65535
+    ('y', INT),  # WORD, using full range: 0..65535
+    ('pressure', INT),  # WORD, full range 0..65535,
+                        # 32768 == pressure 1.0f on Android device
+
+    # when type == control event,
+    ('control', BYTE),    # number of control, starting with 0
+    ('cstate', BYTE),     # control status - 0 off, 1 active
+  ]
+
+  def parse(self, bdata):
+    fit = min(len(bdata), ctypes.sizeof(self))
+    ctypes.memmove(ctypes.addressof(self), bdata, fit)
+
+  def __len__(self):
+    return ctypes.sizeof(self)
+
+
 class Processor(object):
   def __init__(self):
     self.count = 0
+    self.packet = Packet()
 
   def process(self, b):  # b is a binary string
     self.count += 1
     if not b.startswith('GfxTablet'):
       echo('#%3s  (discarded) invalid signature' % self.count)
       return
-    echo('#%3s  (accepted) (%s bytes)' % (self.count, len(b)))
+    # packet accepted
+    msg1 = '#%3s  (got %s bytes)' % (self.count, len(b))
+    #debug    echo(msg1)
+    #debug    import hexdump; hexdump.hexdump(b)
+    self.packet.parse(b)
+    if self.packet.version != 1:
+      echo('  warn: only version 1 of protocol is supported')
+    msg2 = 'type:%s  x,y:%s,%s  pressure:%s' % (self.packet.type,
+               self.packet.x, self.packet.y, self.packet.pressure)
+    if len(b) == len(self.packet):
+      state = 'active' if self.packet.cstate else 'inactive'
+      msg2 += '  control:%s %s' % (self.packet.control,
+                                   state)
+    echo(msg1 + '  ' + msg2)
     
 # --- /parsing ---
 
