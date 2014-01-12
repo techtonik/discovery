@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 This is a reimplementation of old-school fire
 algorithm. The algorithm:
@@ -25,6 +26,8 @@ except ImportError:
   import bootstrap
   import sdl2
 
+# window dimensions
+WIDTH, HEIGHT  = 500, 100
 
 print("---------------------------[ demofire %s ]---" % __version__)
 
@@ -49,7 +52,7 @@ import sdl2.ext as lib
 
 lib.init()  # --- init ---
 
-window = lib.Window('HellFire', size=(500, 100))
+window = lib.Window('HellFire', size=(WIDTH, HEIGHT))
 window.show()
 
 
