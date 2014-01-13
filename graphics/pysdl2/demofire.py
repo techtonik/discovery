@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.4"
+__version__ = "0.5"
 
 try:
   import sdl2
@@ -110,6 +110,23 @@ class PixelLine(Scene):
       if self.py > HEIGHT-10:
         self.py = 10
 
+class LineLine(Scene):
+  def __init__(self, title, renderer):
+    Scene.__init__(self, title, renderer)
+    self.px = 10
+    self.py = 10
+    self.color = lib.Color(255,255,255)
+
+  def draw(self):
+    # draw
+    renderer.draw_line([10, self.py, WIDTH-10, self.py], self.color)
+    renderer.present()
+    # process
+    self.py += 1
+    self.color = lib.Color(randint(0,255),randint(0,255),randint(0,255))
+    if self.py > HEIGHT-10:
+      self.py = 10
+
 
 class CyclicWorld(object):
   """world of scenes.
@@ -146,6 +163,8 @@ scenes = [Scene(name, renderer) for name in names]
 scenes.append(PixelScene('[A Pixel from Hell]', renderer))
 # add scene that draws lines
 scenes.append(PixelLine('[Lines of Pixel]', renderer))
+# add scene that draws lines by lines
+scenes.append(LineLine('[Lines by Line]', renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
