@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.3"
+__version__ = "0.4"
 
 try:
   import sdl2
@@ -75,7 +75,8 @@ class Scene(object):
 
   def __init__(self, title, renderer):
     self.title = title    # scene / algoritm name
-    self.rendered = renderer
+    #self copy is unused for now
+    #self.renderer = renderer
 
   def draw(self):
     """called from main loop to draw frame"""
@@ -87,6 +88,27 @@ class PixelScene(Scene):
     #renderer.clear()
     renderer.draw_point([10,10], lib.Color(255,255,255))
     renderer.present()
+
+from random import randint
+class PixelLine(Scene):
+  def __init__(self, title, renderer):
+    Scene.__init__(self, title, renderer)
+    self.px = 10
+    self.py = 10
+    self.color = lib.Color(255,255,255)
+
+  def draw(self):
+    # draw
+    renderer.draw_point([self.px, self.py], self.color)
+    renderer.present()
+    # process
+    self.px += 1
+    if self.px > WIDTH-10:
+      self.px = 10
+      self.py +=1
+      self.color = lib.Color(randint(0,255),randint(0,255),randint(0,255))
+      if self.py > HEIGHT-10:
+        self.py = 10
 
 
 class CyclicWorld(object):
@@ -122,6 +144,8 @@ names.extend('Hello, World of HellFire.'.split())
 scenes = [Scene(name, renderer) for name in names]
 # add first scene with *real* content
 scenes.append(PixelScene('[A Pixel from Hell]', renderer))
+# add scene that draws lines
+scenes.append(PixelLine('[Lines of Pixel]', renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
