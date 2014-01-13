@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.2"
+__version__ = "0.3"
 
 try:
   import sdl2
@@ -32,13 +32,15 @@ WIDTH, HEIGHT  = 500, 100
 print("---------------------------[ demofire %s ]---" % __version__)
 
 # ---
-# [x] create window of size ~500x100
+# [x] create window
 #
-# [ ] create game loop
-#   [ ] output  - fill with pixels
-#   [ ] input   - wait (for completion or until times comes)
-#   [ ] process - recalculate pixel values
-#
+# [x] create game loop
+#   [x] output  - draw world
+#   [x] input
+#   [x] process - update world
+# ---
+
+# ---
 # [ ] max FPS mode with measuring
 # [ ] fixed FPS mode (25)
 #   ---
@@ -55,13 +57,37 @@ lib.init()  # --- init ---
 window = lib.Window('HellFire', size=(WIDTH, HEIGHT))
 window.show()
 
+# renderer knows how to draw in a window, it provides
+# universal interface to update window contents regardless
+# of window type (GDI, OpenGL, ...)
+renderer = lib.RenderContext(window)
 
 
 # --- define world ---
+#
+# world of scenes
+#
+# every scene is an algorithm that produces fire
 
 class Scene(object):
-  def __init__(self, title):
-    self.title = title
+  """scene knows about renderer and draws itself, it
+     doesn't know anything about window (except size)"""
+
+  def __init__(self, title, renderer):
+    self.title = title    # scene / algoritm name
+    self.rendered = renderer
+
+  def draw(self):
+    """called from main loop to draw frame"""
+    pass
+
+
+class PixelScene(Scene):
+  def draw(self):
+    #renderer.clear()
+    renderer.draw_point([10,10], lib.Color(255,255,255))
+    renderer.present()
+
 
 class CyclicWorld(object):
   """world of scenes.
@@ -88,8 +114,14 @@ class CyclicWorld(object):
 
   def process(self):
     self.window.title = self.item.title
+    self.item.draw()
 
-scenes = [Scene(name) for name in 'Yo! Hello, World of HellFire.'.split()]
+# generate some empty scenes
+names = ['Yo! Press Left to continue...']
+names.extend('Hello, World of HellFire.'.split())
+scenes = [Scene(name, renderer) for name in names]
+# add first scene with *real* content
+scenes.append(PixelScene('[A Pixel from Hell]', renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
@@ -104,7 +136,7 @@ running = True
 while running:
   # [x] output - draw world
   world.process()
-  # [x] input
+  # [x] input and [x] update the world
   events = lib.get_events()
   for e in events:
     if e.type == sdl2.SDL_QUIT:
