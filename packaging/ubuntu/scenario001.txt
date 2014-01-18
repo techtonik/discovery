@@ -1,0 +1,95 @@
+---[Scenario 001]---
+
+It is simple.
+
+There is an outdated version of pyftpdlib on Ubuntu and
+I need to get a newer version.
+
+
+---[Terminology]---
+
+This may be different from official:
+
+*sources*          - archive of pyftpdlib source code
+*source archive*   - same as *sources*
+*upstream source*  - same as *source archive*
+
+*source package*   - archive with pyftpdlib source and data
+                     specific for Ubuntu (patches, scripts, etc.)
+*binary package*   - thing that you install (ends with .deb)
+
+*binary package source*   - same as *source package*
+*source package source*   - Ubuntu specific data from unpacked
+                            *source package*
+                            
+
+---[Process]--
+
+[ ] get *source package*
+[ ] unpack *source package source*
+[ ] update version
+[ ] upload new *source package*
+
+The good news about Ubuntu that you don't need to build binary
+package - Ubuntu does this automatically. You just need to
+upload source package to a special place called Ubuntu PPA.
+
+--- [ ] get *source package* ---
+
+I lied to you. *source package* is not a single archive - it
+is three archives. You need:
+
+    python-pyftpdlib_0.7.0-1.dsc
+    python-pyftpdlib_0.7.0-1.debian.tar.gz
+    python-pyftpdlib_0.7.0.orig.tar.gz
+
+`python-pyftpdlib` is Ubuntu name to for `pyftpdlib` name from
+PyPI, so you need to to know how your Python package is named.
+
+    .orig.tar.gz    - is renamed *upstream source*
+    .debian.tar.gz  - patches and package specific data
+    .dsc            - signed package desciption
+
+--- [ ] unpack *source package source* ---
+
+Just unpack .debia.tar.gz, you will get debian/ directory.
+Ubuntu uses debian packages, so don't be surprised.
+
+--- [ ] update version ---
+
+Open debian/changelog and add new version info (yes, they use
+changelog for that). Copy-paste last entry and update it:
+
+
+    python-pyftpdlib (0.7.0-1) unstable; urgency=low
+
+      * New upstream release.
+
+     -- Janos Guljas <janos@resenje.org>  Thu, 26 Jan 2012 04:02:09 +0100
+
+
+This can be made a template:
+
+
+    @ubuntu-name@ (@version@-1) unstable; urgency=low
+
+      * New upstream release.
+
+     -- @author-email@  @date@
+
+
+Version field has an obligatory "-1" suffix, which is a
+version of the package (not to be confused with version of
+pyftpdlib). You may need new package version for the same
+version of software when you need to fix typo in changelog,
+for example.
+
+Where date is "day-of-week, dd month yyyy hh:mm:ss +zzzz".
+
+--- [ ] upload new *source package* ---
+
+[ ] it seems that this step is only possible on Ubuntu
+---
+[ ] pack debian/ dir into .tar.gz
+  [ ] read version number from debian/changelog
+[ ] ???
