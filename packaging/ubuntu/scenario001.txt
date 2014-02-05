@@ -92,4 +92,15 @@ Where date is "day-of-week, dd month yyyy hh:mm:ss +zzzz".
 ---
 [ ] pack debian/ dir into .tar.gz
   [ ] read version number from debian/changelog
-[ ] ???
+  [ ] @ubuntu-name@_@ubuntu-version@.debian.tar.gz
+[ ] ??? WIP
+
+
+---[Ideally]---
+
+[ ] single file @ubuntu-name@_@ubuntu-version@.ubuntu.tar.gz
+[ ] all necessary files in the root directory
+  [ ] README(.md)? is obligatory
+    [ ] contains entry level descriptions of files and how
+        to use them
+
