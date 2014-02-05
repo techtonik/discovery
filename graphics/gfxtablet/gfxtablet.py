@@ -164,7 +164,7 @@ class Processor(object):
 # Get last IP from all available
 ip = getmyips()[-1]
 
-print('GxfTablet Server IP: %s' % ip)
+print('GfxTablet Server IP: %s' % ip)
 s = UDPSocketStream()
 p = Processor()
 
