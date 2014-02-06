@@ -18,7 +18,7 @@
 #
 # status
 #
-# [ ] subversion traversing for single repository
+# [ ] subversion traversing
 #   [ ] getting list of all revisions
 #   [ ] processing one revision at a time
 #     [ ] update copy to revision
@@ -27,3 +27,31 @@
 #       [ ] rollback bad revision data
 #       [ ] ...
 #
+# [ ] mercurial traversing
+#   [x] getting list of all revisions
+#   [ ] processing one revision at a time
+#     [ ] update copy to revision
+#       [ ] stop on error
+#       [ ] save progress
+#       [ ] rollback bad revision data
+#       [ ] ...
+
+import subprocess
+
+class HG(object):
+
+  def revlist(self):
+    """get list of revisions from oldest to youngest"""
+    cmd = 'hg log --template "{rev}\\n"'
+    output = subprocess.check_output(cmd, shell=True)
+    rev = []
+    for line in output.splitlines():
+      rev.append(line)
+    return reversed(rev)
+
+
+# get API to repository information
+repapi = HG()
+
+for rev in repapi.revlist():
+  print rev
