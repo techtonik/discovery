@@ -36,7 +36,17 @@
 #       [ ] rollback bad revision data
 #       [ ] ...
 
+import copy
+import os
 import subprocess
+
+
+SET1 = {
+  'totalsize': 0,
+  'dirsnum': 0, 
+  'filesnum': 0,
+}
+
 
 class HG(object):
 
@@ -50,8 +60,24 @@ class HG(object):
     return reversed(rev)
 
 
+def process():
+  """calculate directory stats and return tree for saving"""
+  s = copy.copy(SET1)
+  s['totalsize'] = 0
+  for root, dirs, files in os.walk('.'):
+    for f in files:
+      s['totalsize'] += os.path.getsize(os.path.join(root, f))
+    s['filesnum'] += len(files)
+    s['dirsnum'] += len(dirs)
+
+  return s
+
+
+
 # get API to repository information
 repapi = HG()
 
 for rev in repapi.revlist():
-  print rev
+  pass#print rev
+
+print process()
