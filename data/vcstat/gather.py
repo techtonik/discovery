@@ -91,9 +91,11 @@ if __name__ == '__main__':
   # get API to repository information
   repapi = HG()
 
+  # CSV header 
+  print "revision, size, files, dirs"
   for rev in repapi.revlist():
-    pass#print rev
-
-  print process('.')
-
+    line = process('.')
+    line['rev'] = rev
+    #print line
+    print "{rev}, {totalsize}, {filesnum}, {dirsnum}".format(**line)
 
