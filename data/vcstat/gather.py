@@ -82,15 +82,18 @@ def process(path):
   return s
 
 
-# safety check
-if len(runout('hg status')) != 0:
-  sys.exit('Error: Working copy is not clean, can not continue')
+if __name__ == '__main__':
+  # safety check
+  if len(runout('hg status')) != 0:
+    sys.exit('Error: Working copy is not clean, can not continue')
 
 
-# get API to repository information
-repapi = HG()
+  # get API to repository information
+  repapi = HG()
 
-for rev in repapi.revlist():
-  pass#print rev
+  for rev in repapi.revlist():
+    pass#print rev
 
-print process('.')
+  print process('.')
+
+
