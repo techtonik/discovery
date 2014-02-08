@@ -60,11 +60,15 @@ class HG(object):
     return reversed(rev)
 
 
-def process():
-  """calculate directory stats and return tree for saving"""
+def process(path):
+  """calculate SET1 directory stats for given path"""
+
+  # unicode is critical to for non-English local names on Windows
+  path = unicode(path)
+
   s = copy.copy(SET1)
   s['totalsize'] = 0
-  for root, dirs, files in os.walk('.'):
+  for root, dirs, files in os.walk(path):
     for f in files:
       s['totalsize'] += os.path.getsize(os.path.join(root, f))
     s['filesnum'] += len(files)
@@ -80,4 +84,4 @@ repapi = HG()
 for rev in repapi.revlist():
   pass#print rev
 
-print process()
+print process('.')
