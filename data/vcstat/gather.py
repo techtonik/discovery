@@ -38,6 +38,7 @@
 
 import copy
 import os
+import sys
 import subprocess
 
 
@@ -48,12 +49,16 @@ SET1 = {
 }
 
 
+
+def runout(cmd):
+  return subprocess.check_output(cmd, shell=True)
+
+
 class HG(object):
 
   def revlist(self):
     """get list of revisions from oldest to youngest"""
-    cmd = 'hg log --template "{rev}\\n"'
-    output = subprocess.check_output(cmd, shell=True)
+    output = runout('hg log --template "{rev}\\n"')
     rev = []
     for line in output.splitlines():
       rev.append(line)
@@ -76,6 +81,10 @@ def process(path):
 
   return s
 
+
+# safety check
+if len(runout('hg status')) != 0:
+  sys.exit('Error: Working copy is not clean, can not continue')
 
 
 # get API to repository information
