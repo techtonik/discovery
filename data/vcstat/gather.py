@@ -105,5 +105,7 @@ if __name__ == '__main__':
     line = process('.', ignore=['.hg'])
     line['rev'] = rev
     #print line
-    print "{rev}, {totalsize}, {dirsnum}, {filesnum}".format(**line)
+    s = "{rev}, {totalsize}, {dirsnum}, {filesnum}\n".format(**line)
+    sys.stdout.write(s)
+    sys.stdout.flush()
 
