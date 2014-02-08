@@ -65,8 +65,10 @@ class HG(object):
     return reversed(rev)
 
 
-def process(path):
-  """calculate SET1 directory stats for given path"""
+def process(path, ignore=[]):
+  """calculate SET1 directory stats for given path, skipping
+     directories mentioned in ignore (e.g. '.hg', '.svn', ...)
+  """
 
   # unicode is critical to for non-English local names on Windows
   path = unicode(path)
@@ -74,6 +76,11 @@ def process(path):
   s = copy.copy(SET1)
   s['totalsize'] = 0
   for root, dirs, files in os.walk(path):
+    # filter directories
+    for ig in ignore:
+      if ig in dirs:
+        dirs.remove(ig)
+
     for f in files:
       s['totalsize'] += os.path.getsize(os.path.join(root, f))
     s['filesnum'] += len(files)
@@ -92,10 +99,11 @@ if __name__ == '__main__':
   repapi = HG()
 
   # CSV header 
-  print "revision, size, files, dirs"
+  print "revision, size, dirs, files"
   for rev in repapi.revlist():
-    line = process('.')
+    runout('hg up -r %s' % rev)
+    line = process('.', ignore=['.hg'])
     line['rev'] = rev
     #print line
-    print "{rev}, {totalsize}, {filesnum}, {dirsnum}".format(**line)
+    print "{rev}, {totalsize}, {dirsnum}, {filesnum}".format(**line)
 
