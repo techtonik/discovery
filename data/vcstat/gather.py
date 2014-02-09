@@ -56,6 +56,14 @@ def runout(cmd):
 
 class HG(object):
 
+  def check_clean(self):
+    """check that working copy is clean and can be
+       successfully updated to any revision"""
+    if len(runout('hg status')) != 0:
+      return False
+    else:
+      return True
+
   def revlist(self):
     """get list of revisions from oldest to youngest"""
     output = runout('hg log --template "{rev}\\n"')
@@ -90,13 +98,14 @@ def process(path, ignore=[]):
 
 
 if __name__ == '__main__':
-  # safety check
-  if len(runout('hg status')) != 0:
+  # get API to repository information
+  repapi = HG()
+
+  # get clearance
+  if not repapi.check_clean():
     sys.exit('Error: Working copy is not clean, can not continue')
 
 
-  # get API to repository information
-  repapi = HG()
 
   # CSV header 
   print "revision, size, dirs, files"
