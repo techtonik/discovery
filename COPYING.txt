@@ -1,0 +1,12 @@
+By default (i.e. "if not specified otherwise")
+contents of this repository is in Public Domain.
+This means you can apply terms of CC-O, Unlicense
+or Public Domain dedication specific to your
+country/area.
+
+For the rest of us who are humans - use as you
+wish. Attribution is appreciated, but not
+required.
+
+
+anatoly techtonik <techtonik@gmail.com>
