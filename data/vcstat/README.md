@@ -30,3 +30,13 @@ well the revision is compressed. There can be a huge
 increase in size of working copy, but small increase
 in repository size. For what we need to measure the
 repository size delta per revision.
+
+
+Notes
+-----
+Why not SVNPlot?
+- it is SVN only
+- not a simple download and run script
+- requires binary dependencies
+- no docs about produced data format / DB structure
+- two step process is not really needed
