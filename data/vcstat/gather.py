@@ -49,6 +49,9 @@ SET1 = {
 }
 
 
+def echo(msg):
+  '''only for debug'''
+  pass # print msg
 
 def runout(cmd):
   return subprocess.check_output(cmd, shell=True)
@@ -121,10 +124,27 @@ def process(path, ignore=[]):
 
 
 if __name__ == '__main__':
+  # detect version control type
+  i = 0
+  reptype = None
+  for n in ['.svn', '.hg']:
+    if os.path.isdir(n):
+      i += 1
+      reptype = n
+
+  if i == 0:
+    sys.exit('Error: Can\'t detect version control system')
+  if i > 1:
+    sys.exit('Error: Detected several version control systems')
+
   # get API to repository information
-  repapi = HG()
-  
-  #repapi = SVN()
+  if reptype == '.hg':
+    repapi = HG()
+    echo('HG selected')
+  else:
+    repapi = SVN()
+    echo('SVN selected')
+
 
   # get clearance
   if not repapi.check_clean():
