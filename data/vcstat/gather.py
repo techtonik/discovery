@@ -162,7 +162,7 @@ if __name__ == '__main__':
   print "revision, size, dirs, files"
   for rev in repapi.revlist():
     repapi.up(rev)
-    line = process('.', ignore=['.hg'])
+    line = process('.', ignore=[reptype])
     line['rev'] = rev
     #print line
     s = "{rev}, {totalsize}, {dirsnum}, {filesnum}\n".format(**line)
