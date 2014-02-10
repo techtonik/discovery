@@ -73,6 +73,29 @@ class HG(object):
     return reversed(rev)
 
 
+class SVN(object):
+
+  def check_clean(self):
+    """check that working copy is clean and can be
+       successfully updated to any revision"""
+    if len(runout('svn status')) != 0:
+      return False
+    else:
+      return True
+
+  def revlist(self):
+    """get list of revisions from oldest to youngest"""
+    output = runout('svn info')
+    lastrev = 0
+    for line in output.splitlines():
+      if line.startswith('Revision: '):
+        lastrev = line.strip().split()[1]
+
+    lastrev = int(lastrev)
+    rev = range(lastrev + 1)
+    return rev
+
+
 def process(path, ignore=[]):
   """calculate SET1 directory stats for given path, skipping
      directories mentioned in ignore (e.g. '.hg', '.svn', ...)
@@ -100,6 +123,8 @@ def process(path, ignore=[]):
 if __name__ == '__main__':
   # get API to repository information
   repapi = HG()
+  
+  #repapi = SVN()
 
   # get clearance
   if not repapi.check_clean():
