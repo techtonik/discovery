@@ -41,6 +41,8 @@ import os
 import sys
 import subprocess
 
+PY3K = sys.version_info[0] == 3
+
 
 SET1 = {
   'totalsize': 0,
@@ -54,7 +56,10 @@ def echo(msg):
   pass # print msg
 
 def runout(cmd):
-  return subprocess.check_output(cmd, shell=True)
+  if not PY3K:
+    return subprocess.check_output(cmd, shell=True)
+  else:
+    return subprocess.check_output(cmd, shell=True).decode('utf-8')
 
 
 class HG(object):
@@ -110,8 +115,9 @@ def process(path, ignore=[]):
      directories mentioned in ignore (e.g. '.hg', '.svn', ...)
   """
 
-  # unicode is critical to for non-English local names on Windows
-  path = unicode(path)
+  if not PY3K:
+    # unicode is critical to for non-English local names on Windows
+    path = unicode(path)
 
   s = copy.copy(SET1)
   s['totalsize'] = 0
@@ -159,7 +165,7 @@ if __name__ == '__main__':
 
 
   # CSV header 
-  print "revision, size, dirs, files"
+  sys.stdout.write("revision, size, dirs, files\n")
   for rev in repapi.revlist():
     repapi.up(rev)
     line = process('.', ignore=[reptype])
