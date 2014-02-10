@@ -19,22 +19,22 @@
 # status
 #
 # [ ] subversion traversing
-#   [ ] getting list of all revisions
+#   [x] getting list of all revisions
 #   [ ] processing one revision at a time
 #     [ ] update copy to revision
-#       [ ] stop on error
-#       [ ] save progress
-#       [ ] rollback bad revision data
-#       [ ] ...
+#     [x] stop on error
+#     [ ] save progress
+#     [ ] rollback bad revision data
+#     [ ] ...
 #
 # [ ] mercurial traversing
 #   [x] getting list of all revisions
 #   [ ] processing one revision at a time
-#     [ ] update copy to revision
-#       [ ] stop on error
-#       [ ] save progress
-#       [ ] rollback bad revision data
-#       [ ] ...
+#     [x] update copy to revision
+#     [x] stop on error
+#     [ ] save progress
+#     [ ] rollback bad revision data
+#     [ ] ...
 
 import copy
 import os
