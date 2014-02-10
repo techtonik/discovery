@@ -75,6 +75,9 @@ class HG(object):
       rev.append(line)
     return reversed(rev)
 
+  def up(self, rev):
+    runout('hg up -r %s' % rev)
+
 
 class SVN(object):
 
@@ -88,15 +91,18 @@ class SVN(object):
 
   def revlist(self):
     """get list of revisions from oldest to youngest"""
-    output = runout('svn info')
+    output = runout('svn info -r HEAD')
     lastrev = 0
     for line in output.splitlines():
       if line.startswith('Revision: '):
         lastrev = line.strip().split()[1]
 
     lastrev = int(lastrev)
-    rev = range(lastrev + 1)
+    rev = range(1, lastrev + 1)
     return rev
+
+  def up(self, rev):
+    runout('svn up -r %s' % rev)
 
 
 def process(path, ignore=[]):
@@ -155,7 +161,7 @@ if __name__ == '__main__':
   # CSV header 
   print "revision, size, dirs, files"
   for rev in repapi.revlist():
-    runout('hg up -r %s' % rev)
+    repapi.up(rev)
     line = process('.', ignore=['.hg'])
     line['rev'] = rev
     #print line
