@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.5"
+__version__ = "0.6"
 
 try:
   import sdl2
@@ -41,7 +41,7 @@ print("---------------------------[ demofire %s ]---" % __version__)
 # ---
 
 # ---
-# [ ] max FPS mode with measuring
+# [x] max FPS mode with measuring
 # [ ] fixed FPS mode (25)
 #   ---
 #   [ ] measure CPU load for both
@@ -50,9 +50,28 @@ print("---------------------------[ demofire %s ]---" % __version__)
 # /--
 
 
+# --- helpers ---
+
+import time
+
+class Timer(object):
+  def __init__(self, seconds):
+    self.seconds = seconds
+    self.restart()
+
+  def restart(self):
+    self.end = time.time() + self.seconds
+
+  @property
+  def expired(self):
+    return (time.time() > self.end)
+
+
+# --- init ---
+
 import sdl2.ext as lib
 
-lib.init()  # --- init ---
+lib.init()
 
 window = lib.Window('HellFire', size=(WIDTH, HEIGHT))
 window.show()
@@ -128,6 +147,18 @@ class LineLine(Scene):
       self.py = 10
 
 
+class FPS(object):
+  def __init__(self):
+    self.counter = 0
+    self.timer = Timer(1)
+  def process(self):
+    self.counter += 1
+    if self.timer.expired:
+      print "FPS: %s" % self.counter
+      self.counter = 0
+      self.timer.restart()
+
+
 class CyclicWorld(object):
   """world of scenes.
 
@@ -142,6 +173,7 @@ class CyclicWorld(object):
     self.index = 0
     self.item = items[0]
     self.window = window
+    self.fps = FPS()
 
   def cycle(self, count=1):
     """`count` is any amount and can be negative"""
@@ -153,6 +185,8 @@ class CyclicWorld(object):
 
   def process(self):
     self.item.draw()
+    self.fps.process()
+
     self.window.title = self.item.title
 
 # generate some empty scenes
