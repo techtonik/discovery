@@ -183,11 +183,11 @@ class CyclicWorld(object):
       self.index = self.index % len(self.items)
     self.item = self.items[self.index]
 
+    self.window.title = self.item.title
+
   def process(self):
     self.item.draw()
     self.fps.process()
-
-    self.window.title = self.item.title
 
 # generate some empty scenes
 names = ['Yo! Press Left to continue...']
