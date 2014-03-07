@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.7"
+__version__ = "0.8"
 
 try:
   import sdl2
@@ -151,6 +151,28 @@ class LineLine(Scene):
     if self.py > HEIGHT-10:
       self.py = 10
 
+class Gradient(Scene):
+  def __init__(self, title, renderer):
+    Scene.__init__(self, title, renderer)
+    self.px = 10
+    self.py = 10
+    # make 256 colors pallette of reds
+    self.palette = [lib.Color(x,0,0) for x in range(256)]
+    self.coloridx = 0
+
+  def draw(self):
+    # draw
+    renderer.draw_line([10, self.py, WIDTH-10, self.py], 
+                       self.palette[self.coloridx])
+    renderer.present()
+    # process
+    self.py += 1    
+    if self.py > HEIGHT-10:
+      self.py = 10
+    # choose color based on current line number
+    span = HEIGHT-10-10                # total number of drawn lines
+    lidx = float(self.py-10) / span    # line position in span as percentage
+    self.coloridx = int(255 * lidx)  # number in 256 color palette
 
 class FPS(object):
   def __init__(self):
@@ -206,6 +228,8 @@ scenes.append(PixelScene('[A Pixel from Hell]', renderer))
 scenes.append(PixelLine('[Lines of Pixel]', renderer))
 # add scene that draws lines by lines
 scenes.append(LineLine('[Lines by Line]', renderer))
+# draw gradient using lines
+scenes.append(Gradient('[Gradient]', renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
