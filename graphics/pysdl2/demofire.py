@@ -235,8 +235,6 @@ while running:
       if e.key.keysym.sym == sdl2.SDLK_RIGHT:
         world.cycle(1)
 
-  window.refresh()
-
 # /-- main event (game) loop ---
 
 
