@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.6"
+__version__ = "0.7dev"
 
 try:
   import sdl2
@@ -171,22 +171,24 @@ class CyclicWorld(object):
       raise ValueError("At least one element is required")
     self.items = items
     self.index = 0
-    self.item = items[0]
+    self.scene = items[0]
     self.window = window
     self.fps = FPS()
 
   def cycle(self, count=1):
     """`count` is any amount and can be negative"""
+
+    # switch scene
     self.index += count
     if self.index < 0 or self.index > len(self.items)-1:
       # modulo is a good operator for cycling in bounds
       self.index = self.index % len(self.items)
-    self.item = self.items[self.index]
+    self.scene = self.items[self.index]
 
-    self.window.title = self.item.title
+    self.window.title = self.scene.title
 
   def process(self):
-    self.item.draw()
+    self.scene.draw()
     self.fps.process()
 
 # generate some empty scenes
