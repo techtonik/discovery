@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.7dev"
+__version__ = "0.7"
 
 try:
   import sdl2
@@ -94,19 +94,24 @@ class Scene(object):
 
   def __init__(self, title, renderer):
     self.title = title    # scene / algoritm name
-    #self copy is unused for now
     #self.renderer = renderer
 
   def draw(self):
     """called from main loop to draw frame"""
     pass
 
+  def switch(self):
+    """method called on scene switch"""
+    pass
+
 
 class PixelScene(Scene):
   def draw(self):
-    #renderer.clear()
     renderer.draw_point([10,10], lib.Color(255,255,255))
     renderer.present()
+
+  def switch(self):
+    renderer.clear()
 
 from random import randint
 class PixelLine(Scene):
@@ -171,14 +176,12 @@ class CyclicWorld(object):
       raise ValueError("At least one element is required")
     self.items = items
     self.index = 0
-    self.scene = items[0]
     self.window = window
     self.fps = FPS()
+    self.cycle(0)       # call refresh for the first scene
 
   def cycle(self, count=1):
     """`count` is any amount and can be negative"""
-
-    # switch scene
     self.index += count
     if self.index < 0 or self.index > len(self.items)-1:
       # modulo is a good operator for cycling in bounds
@@ -186,6 +189,8 @@ class CyclicWorld(object):
     self.scene = self.items[self.index]
 
     self.window.title = self.scene.title
+
+    self.scene.switch()
 
   def process(self):
     self.scene.draw()
