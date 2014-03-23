@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.8"
+__version__ = "0.9"
 
 try:
   import sdl2
@@ -79,7 +79,7 @@ window.show()
 # renderer knows how to draw in a window, it provides
 # universal interface to update window contents regardless
 # of window type (GDI, OpenGL, ...)
-renderer = lib.RenderContext(window)
+renderer = lib.Renderer(window)
 
 
 # --- define world ---
@@ -152,6 +152,7 @@ class LineLine(Scene):
       self.py = 10
 
 class Gradient(Scene):
+  """ draws one line at a time """
   def __init__(self, title, renderer):
     Scene.__init__(self, title, renderer)
     self.px = 10

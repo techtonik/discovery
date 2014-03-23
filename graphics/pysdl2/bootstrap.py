@@ -93,13 +93,13 @@ def getsecure(filespec, targetdir=LOOT):
 # [ ] Linux / Mac OS
 
 # hash size filename (for secure downloads)
-pysdl2_zip = "959c9688fe56571ae888556d1f45c551b79631a3 1073719 PySDL2-0.8.0.zip"
+pysdl2_zip = "84225e3104973ac4e99ab228da5f5094fa15e538 1081101 PySDL2-0.9.0.zip"
 
 is_32bits = not (sys.maxsize > 2**32)
 if is_32bits:
-  sdl2_zip = "c468474b712c964318224c512f34bf3dec8db06d 354278 SDL2-2.0.1-win32-x86.zip"
+  sdl2_zip = "806a7f4890f598a7f2047d1fd36c3af13963e56f 396930 SDL2-2.0.3-win32-x86.zip"
 else:
-  sdl2_zip = "6dd737b1374031fc4267a6cf305205215bdb0685 407169 SDL2-2.0.1-win32-x64.zip"
+  sdl2_zip = "b5c7dcb5d13c480ff5133691ffd96e28e8cb75fa 462897 SDL2-2.0.3-win32-x64.zip"
   
 
 # transform "hash size filename" to (filename, "hash size", url)
@@ -163,6 +163,8 @@ def extract_zip(zippath, subdir, target):
 SDL2DIR = localdir('PySDL2')
 # and add it to sys.path to make importable
 sys.path.insert(0, SDL2DIR)
+# PYTHONPATH is needed for test subprocesses
+os.environ['PYTHONPATH'] = SDL2DIR
 
 
 #for filename, _, _ in sdl2_files:
@@ -173,12 +175,14 @@ else:
   print("..extracting SDL2..")
   extract_zip(zippath, '', SDL2DIR)
 
-zippath = LOOT + pysdl2_zip.split()[-1]
+zipname = pysdl2_zip.split()[-1]
+zippath = LOOT + zipname
+subdir = zipname.rsplit('.', 1)[0]
 if os.path.exists(SDL2DIR + 'README.txt'):
   print("..PySDL2 already extracted.")
 else:
   print("..extracting PySDL2..")
-  extract_zip(zippath, 'PySDL2-0.8.0', SDL2DIR)
+  extract_zip(zippath, subdir, SDL2DIR)
 
 print("..done.")
 
