@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "0.9"
+__version__ = "1.0"
 
 try:
   import sdl2
@@ -175,6 +175,30 @@ class Gradient(Scene):
     lidx = float(self.py-10) / span    # line position in span as percentage
     self.coloridx = int(255 * lidx)  # number in 256 color palette
 
+
+class SingleStepGradient(Scene):
+  """ draws all lines at once """
+  def __init__(self, title, renderer):
+    Scene.__init__(self, title, renderer)
+    self.px = 10
+    self.py = 10
+    # make 256 colors pallette of yellow -> red -> black
+    self.palette  = [lib.Color(255-x,255-x*3,0) for x in range(85)]
+    #print [255-x-85 for x in range(255-84)]
+    self.palette += [lib.Color(255-x-85,0,0) for x in range(255-84)]
+    self.coloridx = 0
+
+  def draw(self):
+    span = HEIGHT-10-10                # total number of drawn lines
+    for y in range(10, HEIGHT-10+1):
+      # choose color based on current line number
+      lidx = float(y-10) / span    # line position in span as percentage
+      coloridx = int(255 * lidx)   # number in 256 color palette
+      renderer.draw_line([10, y, WIDTH-10, y],
+                         self.palette[255-coloridx])
+    renderer.present()
+
+
 class FPS(object):
   def __init__(self):
     self.counter = 0
@@ -231,6 +255,7 @@ scenes.append(PixelLine('[Lines of Pixel]', renderer))
 scenes.append(LineLine('[Lines by Line]', renderer))
 # draw gradient using lines
 scenes.append(Gradient('[Gradient]', renderer))
+scenes.append(SingleStepGradient('[Single Step Gradient]', renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
