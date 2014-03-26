@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "1.0"
+__version__ = "1.1"
 
 try:
   import sdl2
@@ -92,9 +92,20 @@ class Scene(object):
   """scene knows about renderer and draws itself, it
      doesn't know anything about window (except size)"""
 
-  def __init__(self, title, renderer):
-    self.title = title    # scene / algoritm name
-    #self.renderer = renderer
+  def __init__(self, renderer, title=None):
+    """
+    - renderer:  is a SDL2 renderer used for drawing
+    - title:     scene / algoritm name. if not set, the
+                 value is the 1st line of class docstring
+                 or a class name
+    """
+    self.renderer = renderer
+    if title:
+      self.title = title
+    elif self.__doc__:
+      self.title = self.__doc__.splitlines()[0]
+    else:
+      self.title = self.__class__.__name__
 
   def draw(self):
     """called from main loop to draw frame"""
@@ -106,6 +117,7 @@ class Scene(object):
 
 
 class PixelScene(Scene):
+  """[A Pixel from Hell]"""
   def draw(self):
     renderer.draw_point([10,10], lib.Color(255,255,255))
     renderer.present()
@@ -115,8 +127,8 @@ class PixelScene(Scene):
 
 from random import randint
 class PixelLine(Scene):
-  def __init__(self, title, renderer):
-    Scene.__init__(self, title, renderer)
+  def __init__(self, renderer, title=None):
+    Scene.__init__(self, renderer, title)
     self.px = 10
     self.py = 10
     self.color = lib.Color(255,255,255)
@@ -135,8 +147,8 @@ class PixelLine(Scene):
         self.py = 10
 
 class LineLine(Scene):
-  def __init__(self, title, renderer):
-    Scene.__init__(self, title, renderer)
+  def __init__(self, renderer, title=None):
+    Scene.__init__(self, renderer, title)
     self.px = 10
     self.py = 10
     self.color = lib.Color(255,255,255)
@@ -152,9 +164,9 @@ class LineLine(Scene):
       self.py = 10
 
 class Gradient(Scene):
-  """ draws one line at a time """
-  def __init__(self, title, renderer):
-    Scene.__init__(self, title, renderer)
+  """[Gradient]: one line at a time"""
+  def __init__(self, renderer, title=None):
+    Scene.__init__(self, renderer, title)
     self.px = 10
     self.py = 10
     # make 256 colors pallette of reds
@@ -177,9 +189,9 @@ class Gradient(Scene):
 
 
 class SingleStepGradient(Scene):
-  """ draws all lines at once """
-  def __init__(self, title, renderer):
-    Scene.__init__(self, title, renderer)
+  """[Single Step Gradient]: all lines at once"""
+  def __init__(self, renderer, title=None):
+    Scene.__init__(self, renderer, title)
     self.px = 10
     self.py = 10
     # make 256 colors pallette of yellow -> red -> black
@@ -246,16 +258,16 @@ class CyclicWorld(object):
 # generate some empty scenes
 names = ['Yo! Press Left to continue...']
 names.extend('Hello, World of HellFire.'.split())
-scenes = [Scene(name, renderer) for name in names]
+scenes = [Scene(renderer, title=name) for name in names]
 # add first scene with *real* content
-scenes.append(PixelScene('[A Pixel from Hell]', renderer))
+scenes.append(PixelScene(renderer))
 # add scene that draws lines
-scenes.append(PixelLine('[Lines of Pixel]', renderer))
+scenes.append(PixelLine(renderer, title='[Lines of Pixel]'))
 # add scene that draws lines by lines
-scenes.append(LineLine('[Lines by Line]', renderer))
+scenes.append(LineLine(renderer, title='[Lines by Line]'))
 # draw gradient using lines
-scenes.append(Gradient('[Gradient]', renderer))
-scenes.append(SingleStepGradient('[Single Step Gradient]', renderer))
+scenes.append(Gradient(renderer))
+scenes.append(SingleStepGradient(renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
