@@ -257,7 +257,7 @@ class CyclicWorld(object):
 
 # generate some empty scenes
 names = ['Yo! Press Left to continue...']
-names.extend('Hello, World of HellFire.'.split())
+names.extend(['Hello, World', 'of HellFire..'])
 scenes = [Scene(renderer, title=name) for name in names]
 # add first scene with *real* content
 scenes.append(PixelScene(renderer))
