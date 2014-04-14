@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "1.1"
+__version__ = "1.2"
 
 try:
   import sdl2
@@ -80,6 +80,68 @@ window.show()
 # universal interface to update window contents regardless
 # of window type (GDI, OpenGL, ...)
 renderer = lib.Renderer(window)
+
+
+# --- graphics helper functions ---
+
+def vecsum(la, lb):
+   """ (1,4,2) + (2,-1,1) == (3,3,3) """
+   return tuple(a + b for a, b in zip(la, lb))
+
+def vecop(la, lb, function):
+   return tuple(function(a, b) for a, b in zip(la, lb))
+
+def vecintlerp(l1, l2, pos):
+   """ linear approximation for a vector of ints """
+   return tuple( int(round(a1+(a2-a1)*pos)) for a1, a2 in zip(l1, l2))
+
+
+def gradient(colors, n=256, wrapin=lib.Color):
+   """generate gradient palette with `n` colors using
+      key points from `colors` set as  (R,G,B) values
+      (the process is known as interpolation). return
+      list of sdl.ext.Color
+   """
+   if len(colors) == 1:           # o  is the same as  o--o
+     colors.append(colors[0])
+                                  # o--o---o--o
+   steps = len(colors)-1          # no. of steps (spans) (3)
+   addno = n-len(colors)          # no. of colors to fill
+   spans = [(addno // steps)]*steps   # colors per span
+                                  #  -- -- -- -   (3)+1
+   rem = addno % steps
+
+   if rem:
+     spc = float(steps) / rem       # spans per remaining colors
+     # distribute remaining colors
+     for i in range(rem):
+        # calculate the closest span for rem.color number i+1
+        no = i+1                    # in math count starts with 1
+        spanno = int(no * spc)
+        spans[spanno-1] += 1        # in python count starts with 0
+
+   palette = []
+   # (10/3)  o--o---o--o [2,3,2]
+   # (10/2)  o---o----o  [3,4]    or  (9/2)   o---o---o  [3,3]
+   for i, rng in enumerate(spans):
+      fr = colors[i]                # first color
+      to = colors[i+1]              # second color
+      palette.append(fr)
+
+      for x in range(rng):       # 0,1
+        xn = x+1                 # 1,2  - missing colors
+        pos = float(xn)/(rng+1)  # 1/3, 2/3  - position on a line
+
+        palette.append(vecintlerp(fr, to, pos))
+        #print ".. " + str(veclerp(fr, to, pos))
+
+   palette.append(colors[-1])
+   if not wrapin:
+     return palette
+   else:
+     return [wrapin(*pal) for pal in palette]
+
+#print gradient([(9, 0, 0), (0, 0, 0), (18, 0, 0)], n=9)
 
 
 # --- define world ---
@@ -194,10 +256,7 @@ class SingleStepGradient(Scene):
     Scene.__init__(self, renderer, title)
     self.px = 10
     self.py = 10
-    # make 256 colors pallette of yellow -> red -> black
-    self.palette  = [lib.Color(255-x,255-x*3,0) for x in range(85)]
-    #print [255-x-85 for x in range(255-84)]
-    self.palette += [lib.Color(255-x-85,0,0) for x in range(255-84)]
+    self.palette = gradient( [(255,255,0), (170,0,0), (0,0,0)], n=256)
     self.coloridx = 0
 
   def draw(self):
