@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "1.2"
+__version__ = "1.3"
 
 try:
   import sdl2
@@ -270,6 +270,18 @@ class SingleStepGradient(Scene):
     renderer.present()
 
 
+class PalRotate(SingleStepGradient):
+  """[Rotate Pallette]"""
+  def __init__(self, renderer, title=None):
+    SingleStepGradient.__init__(self, renderer, title)
+    self.palette = gradient( [(255,255,0), (170,0,0), (0,0,0)], n=256)
+
+  def draw(self):
+    shifted = self.palette.pop()
+    self.palette.insert(0, shifted)
+    SingleStepGradient.draw(self)
+
+
 class FPS(object):
   def __init__(self):
     self.counter = 0
@@ -327,6 +339,7 @@ scenes.append(LineLine(renderer, title='[Lines by Line]'))
 # draw gradient using lines
 scenes.append(Gradient(renderer))
 scenes.append(SingleStepGradient(renderer))
+scenes.append(PalRotate(renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
