@@ -30,7 +30,6 @@
 import os
 import sys
 import urllib
-import hashlib
 
 # 1. create .locally subdir
 
@@ -48,13 +47,19 @@ def localdir(name):
 
 # 2. helpers for secure download with hash and size check
 
-def hashsize(path): # calculate SHA-1 hash + file size string 
-  h = hashlib.sha1()
+from hashlib import sha1
+from os.path import exists, getsize, join
+
+def hashsize(path):
+  # calculate SHA-1 hash + file size string 
+  size = getsize(path)
+  h = sha1()
   with open(path, 'rb') as source:
     h.update(source.read())
-  return '%s %s' % (h.hexdigest(), os.path.getsize(path))
+  return '%s %s' % (h.hexdigest(), size)
 
 class HashSizeCheckFailed(Exception):
+  '''Throw when downloaded file fails hash and size check.'''
   pass
 
 def getsecure(filespec, targetdir=LOOT):
@@ -65,9 +70,9 @@ def getsecure(filespec, targetdir=LOOT):
                 % (filepath, shize, hashsize(filepath)))
 
   for f, shize, url in filespec:
-    filepath = os.path.join(targetdir, f)
+    filepath = join(targetdir, f)
     downloaded = False
-    if os.path.exists(filepath):
+    if exists(filepath):
       print("Downloading " + f + " skipped (already downloaded)")
     else:
       print("Downloading %s into %s" % (f, targetdir))
