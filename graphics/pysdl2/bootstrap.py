@@ -93,7 +93,7 @@ def getsecure(filespec, targetdir=LOOT):
 # [ ] Linux / Mac OS
 
 # hash size filename (for secure downloads)
-pysdl2_zip = "84225e3104973ac4e99ab228da5f5094fa15e538 1081101 PySDL2-0.9.0.zip"
+pysdl2_zip = "178cc31a6807952b9f33a8bc36a2c267437b98de 1081564 PySDL2-0.9.2.zip"
 
 is_32bits = not (sys.maxsize > 2**32)
 if is_32bits:
