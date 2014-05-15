@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "1.3"
+__version__ = "1.4dev"
 
 try:
   import sdl2
@@ -282,6 +282,40 @@ class PalRotate(SingleStepGradient):
     SingleStepGradient.draw(self)
 
 
+from random import randint
+class PixelPlane(Scene):
+  """PixelPlane: [x,y] line by line"""
+  def __init__(self, renderer, title=None):
+    Scene.__init__(self, renderer, title)
+    self.span = HEIGHT-10-10          # total number of lines to draw
+    self.bottom = HEIGHT-10-10        # bottom line number
+    self.py = 10   # start positions
+    self.px = 10   # (never changes for this algorithm)
+    self.palette = gradient( [(255,255,0), (170,0,0), (0,0,0)], n=256)
+
+  def draw(self):
+    # borrow algorithm from line per frame
+    # start scan from top to bottom
+    # for every pixel from right to left, the color is
+    #   (left + right + bottom + top) // 4
+    # special cases: 
+    #   bottom line, pixels are generated randomly
+
+    # [ ] draw
+    if self.py == self.bottom:
+      for x in range(10, WIDTH-self.px):
+        renderer.draw_point([x, self.py], self.palette[randint(0,255)])
+    renderer.present()
+    # [ ] process
+    self.py += 1    
+    if self.py > HEIGHT-10:
+      self.py = 10
+
+  def switch(self):
+    renderer.clear()
+
+
+
 class FPS(object):
   def __init__(self):
     self.counter = 0
@@ -340,6 +374,7 @@ scenes.append(LineLine(renderer, title='[Lines by Line]'))
 scenes.append(Gradient(renderer))
 scenes.append(SingleStepGradient(renderer))
 scenes.append(PalRotate(renderer))
+scenes.append(PixelPlane(renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
