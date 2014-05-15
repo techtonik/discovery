@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "1.4dev"
+__version__ = "1.4"
 
 try:
   import sdl2
@@ -284,7 +284,7 @@ class PalRotate(SingleStepGradient):
 
 from random import randint
 class PixelPlane(Scene):
-  """PixelPlane: [x,y] line by line"""
+  """[Pixel Noize]"""
   def __init__(self, renderer, title=None):
     Scene.__init__(self, renderer, title)
     self.span = HEIGHT-10-10          # total number of lines to draw
@@ -294,19 +294,12 @@ class PixelPlane(Scene):
     self.palette = gradient( [(255,255,0), (170,0,0), (0,0,0)], n=256)
 
   def draw(self):
-    # borrow algorithm from line per frame
-    # start scan from top to bottom
-    # for every pixel from right to left, the color is
-    #   (left + right + bottom + top) // 4
-    # special cases: 
-    #   bottom line, pixels are generated randomly
-
-    # [ ] draw
-    if self.py == self.bottom:
-      for x in range(10, WIDTH-self.px):
-        renderer.draw_point([x, self.py], self.palette[randint(0,255)])
+    # draw
+    for x in range(10, WIDTH-self.px):
+      renderer.draw_point([x, self.py], self.palette[randint(0,255)])
     renderer.present()
-    # [ ] process
+
+    # process
     self.py += 1    
     if self.py > HEIGHT-10:
       self.py = 10
@@ -314,6 +307,13 @@ class PixelPlane(Scene):
   def switch(self):
     renderer.clear()
 
+# [ ] HellFire
+  # line per frame algorithm
+  # start scan from top to bottom
+  # for every pixel from right to left, the color is
+  #   (left + right + bottom) // 4
+  # special cases: 
+  #   bottom line, pixels are generated randomly
 
 
 class FPS(object):
