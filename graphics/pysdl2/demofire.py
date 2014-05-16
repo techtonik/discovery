@@ -322,29 +322,31 @@ class FirePlane(PixelPlane):
   def draw(self):
     # draw
     y = self.py-10
-    if self.py == self.bottomline:
-      # line with noize
-      for x in range(self.spanx):
-        self.lines[y][x] = randint(0,255)
-    else:
-      # line with fire
-      for x,c in enumerate(self.lines[y]):  # color
-        l = self.lines[y+1][max(x-1, 0)]    # left
-        d = self.lines[y][x]                # direct
-        #print min(x-1, 0), self.spanx
-        r = self.lines[y+1][min(x+1, self.spanx-1)]
-        self.lines[y][x] = (l+d+r) // 3
-    self.drawline(self.py, self.lines[y])
+    self.recalculate(y)
+    self.render_line(y)
+    renderer.present()
     
     # process bottom to top
     self.py -= 1
     if self.py < 10:
       self.py = self.bottomline
 
-  def drawline(self, y, line):
-    for x, colorno in enumerate(line):
-      renderer.draw_point([x+10, y], self.palette[colorno])
-    renderer.present()
+  def recalculate(self, y):
+    if y+10 == self.bottomline:
+      # line with noize
+      for x in range(self.spanx):
+        self.lines[y][x] = randint(0,255)
+    else:
+      # line with fire
+      for x,c in enumerate(self.lines[y]):  # color
+        l = self.lines[y+1][max(x-1, 0)]    # bottom left
+        b = c                               # self
+        r = self.lines[y+1][min(x+1, self.spanx-1)] # bottom right
+        self.lines[y][x] = (l+b+r) // 3
+
+  def render_line(self, y):
+    for x, colorno in enumerate(self.lines[y]):
+      renderer.draw_point([x+10, y+10], self.palette[colorno])
 
 # [ ] HellFire
   # line per frame algorithm
