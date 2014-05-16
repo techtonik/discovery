@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "1.4"
+__version__ = "1.5"
 
 try:
   import sdl2
@@ -305,6 +305,47 @@ class PixelPlane(Scene):
   def switch(self):
     renderer.clear()
 
+import copy
+class FirePlane(PixelPlane):
+  """[Fire Plane]: listed pixels, line per frame"""
+  def __init__(self, renderer, title=None):
+    PixelPlane.__init__(self, renderer, title)
+    self.spanx = WIDTH-10-10
+    self.spany = HEIGHT-10-10          # total number of lines to draw
+    self.bottomline = HEIGHT-10-1
+    self.py = self.bottomline
+    # line based pixel buffer
+    self.lines = [list()]*self.spany        # total lines
+    for y in range(self.spany):
+      self.lines[y] = [255]*self.spanx     # pixels in line
+
+  def draw(self):
+    # draw
+    y = self.py-10
+    if self.py == self.bottomline:
+      # line with noize
+      for x in range(self.spanx):
+        self.lines[y][x] = randint(0,255)
+    else:
+      # line with fire
+      for x,c in enumerate(self.lines[y]):  # color
+        l = self.lines[y+1][max(x-1, 0)]    # left
+        d = self.lines[y][x]                # direct
+        #print min(x-1, 0), self.spanx
+        r = self.lines[y+1][min(x+1, self.spanx-1)]
+        self.lines[y][x] = (l+d+r) // 3
+    self.drawline(self.py, self.lines[y])
+    
+    # process bottom to top
+    self.py -= 1
+    if self.py < 10:
+      self.py = self.bottomline
+
+  def drawline(self, y, line):
+    for x, colorno in enumerate(line):
+      renderer.draw_point([x+10, y], self.palette[colorno])
+    renderer.present()
+
 # [ ] HellFire
   # line per frame algorithm
   # start scan from top to bottom
@@ -373,6 +414,7 @@ scenes.append(Gradient(renderer))
 scenes.append(SingleStepGradient(renderer))
 scenes.append(PalRotate(renderer))
 scenes.append(PixelPlane(renderer))
+scenes.append(FirePlane(renderer))
 world = CyclicWorld(scenes, window)
 
 # --/ define world ---
