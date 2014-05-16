@@ -287,8 +287,6 @@ class PixelPlane(Scene):
   """[Pixel Noize]"""
   def __init__(self, renderer, title=None):
     Scene.__init__(self, renderer, title)
-    self.span = HEIGHT-10-10          # total number of lines to draw
-    self.bottom = HEIGHT-10-10        # bottom line number
     self.py = 10   # start positions
     self.px = 10   # (never changes for this algorithm)
     self.palette = gradient( [(255,255,0), (170,0,0), (0,0,0)], n=256)
@@ -361,7 +359,7 @@ class CyclicWorld(object):
     self.fps.process()
 
 # generate some empty scenes
-names = ['Yo! Press Left to continue...']
+names = ['Yo! Press Right to continue...']
 names.extend(['Hello, World', 'of HellFire..'])
 scenes = [Scene(renderer, title=name) for name in names]
 # add first scene with *real* content
