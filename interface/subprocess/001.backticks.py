@@ -26,6 +26,12 @@ except subprocess.CalledProcessError as ex:
 
 
 def backticks(command):
+   '''
+   Execute `command and return output.
+   - no return code
+   - no stderr capture
+   - bailed out with MemoryError on Windows with 500Mb of output
+   '''
    try:
        # this doesn't escape shell patterns, such as:
        # ^ (windows cmd.exe shell)
