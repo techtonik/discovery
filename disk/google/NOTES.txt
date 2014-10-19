@@ -1,0 +1,20 @@
+[ ] Find out how to issue temporary request (for a few hours)
+    (right now authorization page doesn't specify for how long the access is granted)
+
+[ ] show upload progress
+    https://developers.google.com/api-client-library/python/guide/media_upload
+
+[ ] set access rights
+
+[ ] list remote files
+
+[ ] cache credentials
+    https://google-api-python-client.googlecode.com/hg/docs/epy/oauth2client.file.Storage-class.html
+
+
+[ ] move into folder
+[ ] create folder
+
+[ ] mention two types of tokens
+    https://stackoverflow.com/questions/13851157/oauth2-and-google-api-access-token-expiration-time
+    https://stackoverflow.com/questions/7030694/oauth2-why-do-access-tokens-expire?rq=1
