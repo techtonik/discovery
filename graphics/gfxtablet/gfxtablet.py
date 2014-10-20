@@ -36,7 +36,7 @@ Comments:
 
 __author__  = "anatoly techtonik <techtonik@gmail.com>"
 __license__ = "MIT/Public Domain/CC0"
-__version__ = "1.0.beta1"
+__version__ = "1.0.beta2"
 
 
 # --- python helpers ---
@@ -171,6 +171,7 @@ p = Processor()
 try:
   import autopy
 except ImportError:
+  autopy = None
   print('..autopy is not installed, mouse control is disabled')
 
 while True:
