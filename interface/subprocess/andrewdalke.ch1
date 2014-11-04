@@ -1,0 +1,389 @@
+Wrapping command-line programs
+by Andrew Dalke (edited by techtonik)
+http://piratepad.net/wrapping-cmdline-python
+
+
+
+Wrapping command-line programs
+
+OpenEye has a program called "mol2nam" which takes a structure input as filename or piped content and gives a systematic name as output.
+
+    $ mol2nam $OE_DIR/examples/rocs/data/caffeine.sdf 
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    1,3,7-trimethyl-3,7-dihydropurine-2,6-dione
+
+    $ echo "c1ccccc1O" | mol2nam -
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    phenol
+
+The input uses OEChem's standard I/O library routines so the default file type is determined from the filename's extension and a filename of "-" means "read SMILES from stdin".
+
+The first step to wrapping a program is to define desired Pythonic interface. This one is good:
+
+    name = smi2name("c1ccccc1O")
+
+Here's a first go at an implementation:
+
+    import os 
+    import subprocess 
+ 
+    MOL2NAM = os.path.join(os.environ["OE_DIR"], "bin", "mol2nam") 
+ 
+    def smi2name(smiles): 
+        p = subprocess.Popen( (MOL2NAM, "-"), 
+                          stdin = subprocess.PIPE, 
+                          stdout = subprocess.PIPE, 
+                          close_fds = True) 
+        stdout_text, stderr_text = p.communicate(smiles) 
+        return stdout_text.rstrip() 
+  
+Some things to point out
+ * By default the program to execute comes from the first terms of the argument list,
+ * I told subprocess to open pipes to the progam's stdin and stdout but not stderr,
+ * "close_fds" closes all file descriptors in the newly created process except for stdin, stdout and stderr. ([ ] test descriptor inheritance)
+ * the "communicate" method passes the text to the process's stdin, closes stdin, reads any text from stdout and stderr (if available), and waits until the process finishes,
+ * the "rstrip()" gets rid of the newline at the end of the output.
+
+Let's test it out. I've saved the above in a file called "smi2name.py".
+
+    >>> from smi2name import *
+    >>> smi2name("c1ccccc1O")
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    'phenol'
+    >>> smi2name("c1ccccc1") 
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    'benzene'
+
+Looks good except for that extra header output sent to stderr. I don't like having functions print things I don't want so what I'll do is have the smi2name program also capture the stderr text and simply ignore the result.
+
+    def smi2name(smiles): 
+        p = subprocess.Popen( (MOL2NAM, "-"),
+                          stdin = subprocess.PIPE,
+                          stdout = subprocess.PIPE,
+                          stderr = subprocess.PIPE,
+                          close_fds = True)
+        stdout_text, stderr_text = p.communicate(smiles)
+        return stdout_text.rstrip()
+
+Trying it out:
+
+    >>> smi2name("c1ccccc1O")
+    'phenol'
+    >>> smi2name("C")
+    'methane'
+    >>> smi2name("S")
+    'hydrogen sulfide'
+    >>> smi2name("[S]")
+    'sulfur'
+    >>> smi2name("U")
+    ''
+    >>> smi2name("[U]")
+    'uranium'
+
+Hmmm, what's that empty string for "U"? Trying it out on the command-line:
+
+    $ echo 'U' | mol2nam -
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    Warning: Error parsing SMILES:
+    Warning: U
+    Warning: ^
+    
+    Warning: Error reading molecule "" in SMILES format.
+
+Ah-ha, "U" isn't a valid SMILES. What other ways are there to cause problems?
+
+    $ echo 'C(C' | mol2nam -
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    Warning: Error parsing SMILES:
+    Warning: Unclosed branch.
+    Warning: C(C
+    Warning:   ^
+    
+    Warning: Error reading molecule "" in SMILES format.
+    $ echo 'C1CCC' | mol2nam -
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    Warning: Error parsing SMILES:
+    Warning: Unclosed ring.
+    Warning: C1CCC
+    Warning:     ^
+    
+    Warning: Error reading molecule "" in SMILES format.
+    $ python -c "print 'C' + '(C)'*70000" | mol2nam -
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    Warning: Error parsing SMILES:
+    Warning: Unclosed branch.
+    Warning: C(C)(C)(C)(C)(C)(C)(C)(C)(C) [...]
+    C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C)(C
+    Segmentation fault
+
+I get a perhaps perverse pleasure from doing things like that last test.
+
+The logic here seems to be "if there is nothing on stdout then get the error message from stderr." I want the error message from the function call to be more informative than just the empty string. It should raise an exception include why there was a problem.
+
+Conviniently we have the stderr output already in a string so it's a simple matter to check for a few known substrings and to see if the line is present that marks the error position. For the last I'll use a regular expression to count the number of spaces before the column indicator "^". For extra safety I require that the "Warning:" be at the start of a line in case there's a compound named "Warning:". It's not likely to happen but I want to reduce the chance of a problem.
+
+    import os, re
+    import subprocess
+    
+    MOL2NAM = os.path.join(os.environ["OE_DIR"], "bin", "mol2nam")
+    
+    class NamingError(Exception):
+        pass
+    
+    # Used to find the character position that cause the problem
+    _error_pos_pat = re.compile(r"^Warning: ( *)\^", re.MULTILINE)
+    
+    def _find_error(text):
+        # Check for a few common problems
+        errmsg = "Cannot parse SMILES"
+        if "\nWarning: Unclosed branch." in text:
+            errmsg = "Unclosed branch"
+        elif "\nWarning: Unclosed ring." in text:
+            errmsg = "Unclosed ring"
+    
+        # Also give the index of the error, if it's present
+        m = _error_pos_pat.search(text)
+        if m:
+            errpos = len(m.group(1)) + 1
+            errmsg = errmsg + " at position %d" % errpos
+            
+        return errmsg    
+    
+    def smi2name(smiles):
+        p = subprocess.Popen( (MOL2NAM, "-"),
+                          stdin = subprocess.PIPE,
+                          stdout = subprocess.PIPE,
+                          stderr = subprocess.PIPE,
+                          close_fds = True)
+        stdout_text, stderr_text = p.communicate(smiles)
+        if stdout_text == "":
+            raise NamingError(_find_error(stderr_text))
+        return stdout_text.rstrip()
+
+Here's what it looks like interactively:
+
+    >>> from smi2name import *
+    >>> smi2name("C")
+    'methane'
+    >>> smi2name("[U]")
+    'uranium'
+    >>> smi2name("U")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in ?
+      File "smi2name.py", line 34, in smi2name
+        raise NamingError(_find_error(stderr_text))
+    smi2name.NamingError: Cannot parse SMILES at position 1
+    >>> smi2name("CCCCC1CCC")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in ?
+      File "smi2name.py", line 34, in smi2name
+        raise NamingError(_find_error(stderr_text))
+    smi2name.NamingError: Unclosed ring at position 9
+
+At this point it's best to write some testing code. Here's a simple function which tries a SMILES string and compares the result to the expected results both for the normal return value and the thrown exception, if present. Put this at the end of the "smi2name.py" file.
+
+    def test():
+        for smi, name, errmsg in (
+            ("C", "methane", None),
+            ("U", None, "Cannot parse SMILES at position 1"),
+            ("CC1", None, "Unclosed ring at position 3"),
+            ("C"*32764 + "(C)", None, "Unclosed branch"),
+            ("CCCC(C", None, "Unclosed branch at position 6"),
+            ("CCCCCC)C", None, "Cannot parse SMILES at position 7"),
+            ("[U]", "uranium", None) ):
+    
+            computed_name = computed_errmsg = None
+            try:
+                computed_name = smi2name(smi)
+            except NamingError, err:
+                computed_errmsg = str(err)
+    
+            if (name != computed_name or
+                errmsg != computed_errmsg):
+                raise AssertionError("SMILES: %r expected (%r %r) got (%r %r)"
+                                     % (smi, name, errmsg,
+                                        computed_name, computed_errmsg))
+        print "All tests passed."
+    
+    if __name__ == "__main__":
+        test()
+
+Once finished it should print "All tests passed." There are a couple of points to make about the test code. I raise an exception if there's a problem instead of printing the problem and going on because I've found that the extra information isn't helpful and can be more confusing than just reporting the first error. I also considered having a more complicated error report but decided it it would be too hard to test the testing code.
+
+In further testing I found a few more test cases I missed. What about the empty SMILES string?
+
+    >>> smi2name("")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in ?
+      File "smi2name.py", line 34, in smi2name
+        raise NamingError(_find_error(stderr_text))
+    smi2name.NamingError: Cannot parse SMILES
+    >>> 
+
+Testing on the command-line:
+
+    $ echo '' | mol2nam -
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    $ 
+
+and indeed we see that mol2nam doesn't print any output for that case. Should the empty SMILES string be valid? I'm going to say that it should and that its name is "vacuum". The easiest way is to filter that case out at the start of smi2name.
+
+    def smi2name(smiles):
+        if not smiles:
+          return "vacuum"
+        ...
+
+The test case for this is:
+
+        ("", "vacuum", None),
+
+I could also check for things like " " but as a SMILES string may not contain a space that should be treated as an error.
+
+Another problem is with structures smi2nam doesn't yet handle.
+
+    $ echo 'C1CC23CC4CC3C1C(C2)CC4' | $OE_DIR/bin/mol2nam -
+    mol2nam v1.0  Structure to Name Conversion
+    OpenEye Scientific Software, November 2003
+    
+    BLAH
+    $ 
+
+It can also make outputs like ethyl-dimethyl-BLAH and tetramethylBLAH. For this case I'll raise an NamingError exception with the text "Unsupported structure". The easiest implementation is to check if the string "BLAH" is in the stdout_text and if so raise the exception.
+
+        ...
+        if "BLAH" in stdout_text:
+            raise NamingError("Unsupported structure")
+        return stdout_text.rstrip()
+ 
+and its test case is:
+
+        ("C1CC23CC4CC3C1C(C2)CC4", None, "Unsupported structure"),
+
+Finally, if the string passed to smi2name contains a newline then it will interfere with the protocol the wrapper uses to talk with the underlying smi2nam program.
+
+    >>> smi2name("C\nCC")
+    'methane\nethane'
+
+Often you can guarantee that the input will not contain a newline or other special characters so you don't need to check for this case. Still, to be complete you should not allow characters 0 through 32 or 127 and above since those cannot be used in a SMILES and might cause problems if present. The easiest way to check for this is with another regular expression.
+
+    >>> pat = re.compile(r"[^\041-\0176]")
+    >>> pat.search("A")
+    >>> pat.search(" ")
+    <_sre.SRE_Match object at 0x74fa8>
+    >>> pat.search(chr(127))
+    <_sre.SRE_Match object at 0x74e90>
+    >>> pat.search("This is a test\n.")
+    <_sre.SRE_Match object at 0x74fa8>
+
+However, my belief is that this level of checking should not be done here so I won't include it in my code. It should instead be done when foreign and potentially untrusted data is brought into the system and not at this level in the library. This includes reading data from the network, from a user interface, or perhaps from your database. "Perhaps" because your database almost certainly contains trustworthy data.
+
+Putting it all together, here's the final version along with a docstring to explain how to use it:
+
+    import os, re
+    import subprocess
+    
+    MOL2NAM = os.path.join(os.environ["OE_DIR"], "bin", "mol2nam")
+    
+    class NamingError(Exception):
+        pass
+    
+    _error_pos_pat = re.compile(r"^Warning: ( *)\^", re.MULTILINE)
+    
+    def _find_error(text):
+        errmsg = "Cannot parse SMILES"
+        if "\nWarning: Unclosed branch." in text:
+          errmsg = "Unclosed branch"
+        elif "\nWarning: Unclosed ring." in text:
+            errmsg = "Unclosed ring"
+    
+        m = _error_pos_pat.search(text)
+        if m:
+            errpos = len(m.group(1)) + 1
+            errmsg = errmsg + " at position %d" % errpos
+            
+        return errmsg
+    
+
+def smi2name(smiles):
+    """compute an IUPAC systematic name given a SMILES string
+
+    Raises NamingError if there was a problem (eg. syntax error
+    in the SMILES or structure too complex to convert into an
+    IUPAC name).  The SMILES must not contain a newline.
+    """
+    if not smiles:
+        return "vacuum"
+    p = subprocess.Popen( (MOL2NAM, "-"),
+                          stdin = subprocess.PIPE,
+                          stdout = subprocess.PIPE,
+                          stderr = subprocess.PIPE,
+                          close_fds = True)
+    stdout_text, stderr_text = p.communicate(smiles)
+    if stdout_text == "":
+        raise NamingError(_find_error(stderr_text))
+    if "BLAH" in stdout_text:
+        raise NamingError("Unsupported structure")
+    return stdout_text.rstrip()
+
+def test():
+    for smi, name, errmsg in (
+        ("C", "methane", None),
+        ("U", None, "Cannot parse SMILES at position 1"),
+        ("CC1", None, "Unclosed ring at position 3"),
+        ("C"*32764 + "(C)", None, "Unclosed branch"),
+        ("CCCC(C", None, "Unclosed branch at position 6"),
+        ("CCCCCC)C", None, "Cannot parse SMILES at position 7"),
+        ("[U]", "uranium", None),
+        ("", "vacuum", None),
+        ("C1CC23CC4CC3C1C(C2)CC4", None, "Unsupported structure")):
+
+        computed_name = computed_errmsg = None
+        try:
+            computed_name = smi2name(smi)
+        except NamingError, err:
+            computed_errmsg = str(err)
+
+        if (name != computed_name or
+            errmsg != computed_errmsg):
+            raise AssertionError("SMILES: %r expected (%r %r) got (%r %r)"
+                                 % (smi, name, errmsg,
+                                    computed_name, computed_errmsg))
+    print "All tests passed."
+
+if __name__ == "__main__":
+    test()
+
+Clarification: I said """...in case there's a compound named "Warning:". It's not likely to happen but I want to reduce the chance of a problem.""" Actually, that case should never happen but the following can occur if the SMILES string comes from untrusted sources
+% echo "CCC) Warning: Unclosed ring." | $OE_DIR/bin/mol2nam -
+mol2nam v1.0  Structure to Name Conversion
+OpenEye Scientific Software, November 2003
+
+Warning: Error parsing SMILES:
+Warning: CCC) Warning: Unclosed ring.
+Warning:    ^
+
+Warning: Error reading molecule "" in SMILES format.
+% 
+The check for the newline before the warning prevents the false positive for an "Unclosed ring" error message.
+
+Correction: April 16. I was using the executable name "MOL2NAM" instead of "mol2nam". It worked for me because I use a Mac which has a case-preserving but case-insensitive filesystem,
+Andrew Dalke
+

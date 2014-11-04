@@ -1,0 +1,8 @@
+Wrapping command line programs with Python
+
+`twine upload` is an alternative to `setup.py` for uploading
+packages to PyPI. I wanted to extend `twine` with `twine source`
+command that will checkout source using Git or HG automatically.
+
+    $ twine source https://bitbucket.org/techtonik/python-wget/
+    hg clone https://bitbucket.org/techtonik/python-wget python-wget
