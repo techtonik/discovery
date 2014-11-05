@@ -24,8 +24,40 @@
 #                      dir created .locally
 #   extract_zip(zippath, subdir, target)
 #                    - extracts subdir from the zip file
-#   getsecure(filespec)
-#                    - download file and check hash/size
+#   getsecure(names)
+#                    - download files and check hash/size
+
+FILESPEC = [
+  dict(
+    name='pysdl2',
+    filename='PySDL2-0.9.2.zip',
+    hashsize='178cc31a6807952b9f33a8bc36a2c267437b98de 1081564',
+    url='https://bitbucket.org/marcusva/py-sdl2/downloads/PySDL2-0.9.2.zip',
+    checkpath='PySDL2'
+  ),
+  dict(
+    name='sdl2-win32',
+    filename='SDL2-2.0.3-win32-x86.zip',
+    hashsize='806a7f4890f598a7f2047d1fd36c3af13963e56f 396930',
+    url='http://www.libsdl.org/release/SDL2-2.0.3-win32-x86.zip',
+    checkpath='PySDL2/SDL2.dll'
+  ),
+  dict(
+    name='sdl2-win64',
+    filename='SDL2-2.0.3-win32-x64.zip',
+    hashsize='b5c7dcb5d13c480ff5133691ffd96e28e8cb75fa 462897',
+    url='http://www.libsdl.org/release/SDL2-2.0.3-win32-x64.zip',
+    checkpath='PySDL2/SDL2.dll'
+  ),
+]
+
+# convenient access to table cells as lookup('pysdl2', 'path')
+def lookup(name, field, table=FILESPEC):
+  """return `field` value for the row with given `name`"""
+  for row in table:
+    if row['name'] == name:
+      return row[field]
+
 
 import os
 import sys
@@ -62,14 +94,17 @@ class HashSizeCheckFailed(Exception):
   '''Throw when downloaded file fails hash and size check.'''
   pass
 
-def getsecure(filespec, targetdir=LOOT):
+def getsecure(names, targetdir=LOOT):
   def check(filepath, shize):
     if hashsize(filepath) != shize:
       raise HashSizeCheckFailed(
                 'Hash/Size mismatch for %s\n  exp: %s\n  act: %s'
                 % (filepath, shize, hashsize(filepath)))
 
-  for f, shize, url in filespec:
+  for name in names:
+    f = lookup(name, 'filename')
+    shize = lookup(name, 'hashsize')
+    url = lookup(name, 'url')
     filepath = join(targetdir, f)
     downloaded = False
     if exists(filepath):
@@ -97,29 +132,12 @@ def getsecure(filespec, targetdir=LOOT):
 # [x] Windows 32/64
 # [ ] Linux / Mac OS
 
-# hash size filename (for secure downloads)
-pysdl2_zip = "178cc31a6807952b9f33a8bc36a2c267437b98de 1081564 PySDL2-0.9.2.zip"
-
+files = ['pysdl2']
 is_32bits = not (sys.maxsize > 2**32)
 if is_32bits:
-  sdl2_zip = "806a7f4890f598a7f2047d1fd36c3af13963e56f 396930 SDL2-2.0.3-win32-x86.zip"
+  files.append('sdl2-win32')
 else:
-  sdl2_zip = "b5c7dcb5d13c480ff5133691ffd96e28e8cb75fa 462897 SDL2-2.0.3-win32-x64.zip"
-  
-
-# transform "hash size filename" to (filename, "hash size", url)
-files = []
-haize, filename = pysdl2_zip.rsplit(None, 1)
-files.append( (filename, haize, 'https://bitbucket.org/marcusva/py-sdl2/downloads/' + filename) )
-haize, filename = sdl2_zip.rsplit(None, 1)
-files.append( (filename, haize, 'http://www.libsdl.org/release/' + filename) )
-
-# files = [
-#    ('SDL2-2.0.1-win32-x86.zip',
-#     'c468474b712c964318224c512f34bf3dec8db06d 354278',
-#     'http://www.libsdl.org/release/SDL2-2.0.1-win32-x86.zip'),
-#    ...
-# ]
+  files.append('sdl2-win64')
 
 
 print('Downloading PySDL2 and binary for SDL2 lib..')
@@ -172,15 +190,18 @@ sys.path.insert(0, SDL2DIR)
 os.environ['PYTHONPATH'] = SDL2DIR
 
 
-#for filename, _, _ in sdl2_files:
-zippath = LOOT + sdl2_zip.split()[-1]
+if is_32bits:
+  zipname = lookup('sdl2-win32', 'filename')
+else:
+  zipname = lookup('sdl2-win64', 'filename')
+zippath = LOOT + zipname
 if os.path.exists(SDL2DIR + 'README-SDL.txt'):
   print("..SDL2 already extracted.")
 else:
   print("..extracting SDL2..")
   extract_zip(zippath, '', SDL2DIR)
 
-zipname = pysdl2_zip.split()[-1]
+zipname = lookup('pysdl2', 'filename')
 zippath = LOOT + zipname
 subdir = zipname.rsplit('.', 1)[0]
 if os.path.exists(SDL2DIR + 'README.txt'):
