@@ -30,9 +30,9 @@
 FILESPEC = [
   dict(
     name='pysdl2',
-    filename='PySDL2-0.9.2.zip',
-    hashsize='178cc31a6807952b9f33a8bc36a2c267437b98de 1081564',
-    url='https://bitbucket.org/marcusva/py-sdl2/downloads/PySDL2-0.9.2.zip',
+    filename='PySDL2-0.9.3.zip',
+    hashsize='030f2351d1da387f878e14c8a86e08571d7baf5b 1085634',
+    url='https://bitbucket.org/marcusva/py-sdl2/downloads/PySDL2-0.9.3.zip',
     checkpath='PySDL2'
   ),
   dict(
