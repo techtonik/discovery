@@ -61,7 +61,10 @@ def lookup(name, field, table=FILESPEC):
 
 import os
 import sys
-import urllib
+try:
+  from urllib import urlretrieve  # Python 2
+except ImportError:
+  from urllib.request import urlretrieve
 
 # 1. create .locally subdir
 
@@ -111,7 +114,7 @@ def getsecure(names, targetdir=LOOT):
       print("Downloading " + f + " skipped (already downloaded)")
     else:
       print("Downloading %s into %s" % (f, targetdir))
-      urllib.urlretrieve(url, filepath)
+      urlretrieve(url, filepath)
       downloaded = True
 
     if not shize:
@@ -234,7 +237,10 @@ print("Bootstrap complete.")
 # 5. run tests if executed standalone
 if __name__ == '__main__':
   print("Press Enter to run tests for PySDL2..")
-  raw_input()
+  try:
+    raw_input()  # Python 2
+  except NameError:
+    input()
   
   print("Running tests for PySDL2..")
 
