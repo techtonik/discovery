@@ -4,10 +4,11 @@ This file is placed into Public Domain by
 anatoly techtonik <techtonik@gmail.com>
 -->
 <Module>
-  <ModulePrefs title="Giving on Gratipay" /> 
+  <ModulePrefs title="Giving on Gratipay" height="72" /> 
+  <UserPref name="name" display_name="Name on Gratipay"/>
   <Content type="html">
      <![CDATA[ 
-<script data-gratipay-username="techtonik"
+<script data-gratipay-username="__UP_name__"
         data-gratipay-widget="giving"
         src="//grtp.co/v1.js" async="true"></script>
      ]]>
