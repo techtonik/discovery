@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file is placed into Public Domain by
+anatoly techtonik <techtonik@gmail.com>
+-->
+<Module>
+  <ModulePrefs title="Giving on Gratipay" /> 
+  <Content type="html">
+     <![CDATA[ 
+<script data-gratipay-username="techtonik"
+        data-gratipay-widget="giving"
+        src="//grtp.co/v1.js" async></script>
+     ]]>
+  </Content> 
+</Module>
