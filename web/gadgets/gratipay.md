@@ -5,9 +5,8 @@ you blog overview, then:
 
 Enter URL (don't add 'https://' prefix or it won't work):
 
-    bitbucket.org/techtonik/discovery/raw/cb55f624cea4af4d6ee60d3268c6ddddaf8c4b82/web/gadgets/gratipay.xml
+    bitbucket.org/techtonik/discovery/raw/73f57e4804a8c37bf07492df51c9447711f7347a/web/gadgets/gratipay.xml
 
-It will show how much I am giving out on Gratipay, because Gadget has
-my name hardcoded. You need to change it and reupload your gadget
-somewhere to make it useful for your own blog. I may be able to make
-this configurable.
+Set your "Name on Gratipay" and that's it. Blogger preview is somewhat
+buggy, so don't rely on it if widget doesn't render correctly - check
+the actual page - it should work there.
