@@ -5,8 +5,8 @@ you blog overview, then:
 
 Enter URL (don't add 'https://' prefix or it won't work):
 
-    bitbucket.org/techtonik/discovery/raw/73f57e4804a8c37bf07492df51c9447711f7347a/web/gadgets/gratipay.xml
+    bitbucket.org/techtonik/discovery/raw/de3e5a605c1091bd84da3df033e29fa5731fce3e/web/gadgets/gratipay.xml
 
-Set your "Name on Gratipay" and that's it. Blogger preview is somewhat
-buggy, so don't rely on it if widget doesn't render correctly - check
-the actual page - it should work there.
+Set your "Name on Gratipay" (widget type if you want) and view how
+it looks on your blog page. Blogger preview didn't work correctly
+for me, so don't pay attention to it.
