@@ -9,7 +9,7 @@ anatoly techtonik <techtonik@gmail.com>
      <![CDATA[ 
 <script data-gratipay-username="techtonik"
         data-gratipay-widget="giving"
-        src="//grtp.co/v1.js" async></script>
+        src="//grtp.co/v1.js" async="true"></script>
      ]]>
   </Content> 
 </Module>
