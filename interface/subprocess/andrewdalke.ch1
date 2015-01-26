@@ -6,7 +6,8 @@ http://piratepad.net/wrapping-cmdline-python
 
 Wrapping command-line programs
 
-OpenEye has a program called "mol2nam" which takes a structure input as filename or piped content and gives a systematic name as output.
+OpenEye has a program called "mol2nam" which takes a data structure input
+as filename or piped content and gives its systematic name as output.
 
     $ mol2nam $OE_DIR/examples/rocs/data/caffeine.sdf 
     mol2nam v1.0  Structure to Name Conversion
@@ -20,7 +21,7 @@ OpenEye has a program called "mol2nam" which takes a structure input as filename
     
     phenol
 
-The input uses OEChem's standard I/O library routines so the default file type is determined from the filename's extension and a filename of "-" means "read SMILES from stdin".
+The input file type is determined from the filename's extension and a filename of "-" means "read SMILES from stdin".
 
 The first step to wrapping a program is to define desired Pythonic interface. This one is good:
 

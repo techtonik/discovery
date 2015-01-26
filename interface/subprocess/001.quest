@@ -1,0 +1,15 @@
+ID: MISSINGMOL2NAM
+Title: Replacement for MOL2NAM
+Description:
+  Andrew's program MOL2NAM was lost, and the
+  laboratory needs a replacement to test its
+  warper prototypes.
+Task:
+  Create a set of cross-platform programs
+  to be used instead of MOL2NAM, and place
+  them into "dataset" subdir.
+Comments:
+  The programs should be platform specific
+  binary executables, and the toolchain to
+  produce them must be cross-platform as
+  well. Go looks like a valid tool.
