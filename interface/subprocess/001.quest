@@ -1,4 +1,4 @@
-ID: MISSINGMOL2NAM
+ID: 001 MISSINGMOL2NAM
 Title: Replacement for MOL2NAM
 Description:
   Andrew's program MOL2NAM was lost, and the
@@ -8,6 +8,8 @@ Task:
   Create a set of cross-platform programs
   to be used instead of MOL2NAM, and place
   them into "dataset" subdir.
+Subtasks:
+  002 ROTTENMOL
 Comments:
   The programs should be platform specific
   binary executables, and the toolchain to
