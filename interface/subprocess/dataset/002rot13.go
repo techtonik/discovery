@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "io/ioutil"
 )
 
 var header = 
@@ -9,5 +10,8 @@ var header =
 Wrap Labs Software, January 2015`
 
 func main() {
-  fmt.Println(header)
+  fmt.Println(header + "\n")
+
+  contents, _ := ioutil.ReadFile("caffeine.txt")
+  fmt.Println(string(contents))
 }
