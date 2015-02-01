@@ -1,3 +1,14 @@
+/*
+Replacement for MOL2NAM software used in Andrew's Dalke
+article on wrapping programs with Python. Features:
+
+[x] always output header (to stderr)
+[x] mol2nam <filename>  - process file to stdout
+[ ] mol2nam -           - process stdin input to stdout
+
+Replacement just decodes few known rot13 lines.
+*/
+
 package main
 
 import (
