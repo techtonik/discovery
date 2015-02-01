@@ -4,7 +4,7 @@ article on wrapping programs with Python. Features:
 
 [x] always output header (to stderr)
 [x] mol2nam <filename>  - process file to stdout
-[ ] mol2nam -           - process stdin input to stdout
+[x] mol2nam -           - process stdin input to stdout
 
 Replacement just decodes few known rot13 lines.
 */
@@ -42,7 +42,12 @@ func main() {
     os.Exit(-1)
   }
 
-  contents, _ := ioutil.ReadFile(os.Args[1])
+  var contents []byte
+  if os.Args[1] == "-" {
+    contents, _ = ioutil.ReadAll(os.Stdin)
+  } else {
+    contents, _ = ioutil.ReadFile(os.Args[1])
+  }
   text := strings.TrimSpace(string(contents))
   fmt.Println(fakerot13(text))
 }
