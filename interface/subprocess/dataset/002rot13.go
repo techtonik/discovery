@@ -24,7 +24,7 @@ func fakerot13(text string) string {
 }
 
 func main() {
-  fmt.Println(header)
+  fmt.Fprintln(os.Stderr, header)
 
   if len(os.Args[1:]) == 0 {
     fmt.Println(usage)
