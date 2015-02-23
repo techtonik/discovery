@@ -1,0 +1,26 @@
+
+World need a fast way to draw and show things to people.
+Canvas2D is a automatic canvas for drawing pixels.
+
+Accessility is critical. OpenGL requires days to learn
+before a person could draw a pixel on the screen. The
+purpose is to provide autodetection by default and APIs
+that people used to. The stuff should be easy to extend
+and easy to check its supported functions.
+
+
+### Getting to the canvas
+
+Using universal, simplified, safe API, suported by all
+available backends.
+
+    import canvas2d
+
+    canvas2d.line(0, 100, 100, 100)  # horizontal line
+
+If backend can not provide API, it should give a message.
+through message API.
+
+
+
+
