@@ -19,19 +19,41 @@ Its purpose is to:
 # [ ] matplotlib
 # [ ] pygame
 
+
+# --- helper Table class
+
+class Table(object):
+    __table_api__ = '1.0'       # version of Table class API
+    def __init__(self, *args):
+        self._names = args
+        self._rows = []
+    def addrow(self, *args):
+        self._rows.append(list(args))
+    def update(self, idname, idvalue, name, value):
+        idx = self._names.index(idname)
+        tgtidx = self._names.index(name)
+        for i,r in enumerate(self._rows):
+            if r[idx] == idvalue:
+                r[tgtidx] = value
+    def __str__(self):
+        text = ""
+        for r in self._rows:
+            text += str(r)
+        return text
+
+# --/ helper Table
+
+
 # Python should really have a Table data type
-BACKENDS = {
-  "tkinter": False,
-}
+BACKENDS = Table("name", "exists")
+BACKENDS.addrow("tkinter", False)
 
 def detect_backends():
-    # [ ] make a copy
-    detected = BACKENDS
-    try:
-        import Tkinter
-        detected["tkinter"] = True
-    except ImportError:
-        pass
-    return detected
+    global BACKENDS
+    import backtk
+    if backtk.exists():
+        BACKENDS.update("name", "tkinter", "exists", True)
 
-print(detect_backends())
+detect_backends()
+
+print(BACKENDS)
