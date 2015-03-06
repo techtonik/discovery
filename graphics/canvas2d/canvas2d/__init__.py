@@ -66,8 +66,9 @@ def detect_backends():
         BACKENDS.update("name", "tkinter", "exists", True)
         BACKENDS.update("name", "tkinter", "module", backtk)
 
+canvas = None
 detect_backends()
-
 for backend in BACKENDS:
-  print backend
+    if backend['exists']:
+        canvas = backend['module'].get_canvas(320, 240)
 
