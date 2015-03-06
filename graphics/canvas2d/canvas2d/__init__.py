@@ -26,6 +26,9 @@ Its purpose is to:
 # [x] method to find and update cell using lookup values
 # [x] can be printed as a string
 # [x] supports iteration row by row
+# [x] return row as OrderedDict for easy access
+
+from collections import OrderedDict
 
 class Table(object):
     __table_api__ = '1.0'       # version of Table class API
@@ -47,7 +50,7 @@ class Table(object):
         return text
     def __iter__(self):
         for r in self._rows:
-            yield r
+            yield OrderedDict(zip(self._names, r))
 
 # --/ helper Table
 
