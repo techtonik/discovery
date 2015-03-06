@@ -21,6 +21,11 @@ Its purpose is to:
 
 
 # --- helper Table class
+# [x] initialization sets columns names
+# [x] method to add row
+# [x] method to find and update cell using lookup values
+# [x] can be printed as a string
+# [x] supports iteration row by row
 
 class Table(object):
     __table_api__ = '1.0'       # version of Table class API
@@ -40,20 +45,26 @@ class Table(object):
         for r in self._rows:
             text += str(r)
         return text
+    def __iter__(self):
+        for r in self._rows:
+            yield r
 
 # --/ helper Table
 
 
 # Python should really have a Table data type
-BACKENDS = Table("name", "exists")
-BACKENDS.addrow("tkinter", False)
+BACKENDS = Table("name", "exists", "module")
+BACKENDS.addrow("tkinter", False, None)
 
 def detect_backends():
     global BACKENDS
     import backtk
     if backtk.exists():
         BACKENDS.update("name", "tkinter", "exists", True)
+        BACKENDS.update("name", "tkinter", "module", backtk)
 
 detect_backends()
 
-print(BACKENDS)
+for backend in BACKENDS:
+  print backend
+
