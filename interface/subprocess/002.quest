@@ -6,16 +6,17 @@ Description:
   alternative that gives cryptic results from
   cryptic input and vice versa.
 Task:
-  Create ROT13 program that takes input as 
-  filename and outputs
-  rotten content and program header.
+  Create ROT13 program that takes filename and
+  writes rotten content on stdout. MOL2NAM also
+  prints its header to stderr and ROT13 should
+  do the same.
 Comments:
   phenol -> curaby
   c1ccccc1O -> p1ppppp1B
   1,3,7-gevzrguly-3,7-qvulqebchevar-2,6-qvbar ->
     1,3,7-trimethyl-3,7-dihydropurine-2,6-dione
   caffeine -> pnssrvar
-
+Test:
   $ rot13 caffeine.txt
   rot13 v1.0  String to ROT13 Conversion
   Wrap Labs Software, January 2015
