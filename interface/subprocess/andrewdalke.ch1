@@ -1,7 +1,7 @@
 Wrapping command-line programs
-by Andrew Dalke (edited by techtonik)
+by Andrew Dalke
+(edited by anatoly techtonik)
 http://piratepad.net/wrapping-cmdline-python
-
 
 
 Wrapping command-line programs
@@ -21,9 +21,11 @@ as filename or piped content and gives its systematic name as output.
     
     phenol
 
-The input file type is determined from the filename's extension and a filename of "-" means "read SMILES from stdin".
+The input file type is determined from the filename's extension and a filename
+of "-" means "read SMILES from stdin".
 
-The first step to wrapping a program is to define desired Pythonic interface. This one is good:
+The first step to wrapping a program is to define desired Pythonic interface.
+This one is good:
 
     name = smi2name("c1ccccc1O")
 
@@ -43,10 +45,15 @@ Here's a first go at an implementation:
         return stdout_text.rstrip() 
   
 Some things to point out
- * By default the program to execute comes from the first terms of the argument list,
- * I told subprocess to open pipes to the progam's stdin and stdout but not stderr,
- * "close_fds" closes all file descriptors in the newly created process except for stdin, stdout and stderr. ([ ] test descriptor inheritance)
- * the "communicate" method passes the text to the process's stdin, closes stdin, reads any text from stdout and stderr (if available), and waits until the process finishes,
+ * By default the program to execute comes from the first terms of the
+     argument list,
+ * I told subprocess to open pipes to the progam's stdin and stdout but
+     not stderr,
+ * "close_fds" closes all file descriptors in the newly created process
+     except for stdin, stdout and stderr. ([ ] test descriptor inheritance)
+ * the "communicate" method passes the text to the process's stdin,
+     closes stdin, reads any text from stdout and stderr (if available), and
+     waits until the process finishes,
  * the "rstrip()" gets rid of the newline at the end of the output.
 
 Let's test it out. I've saved the above in a file called "smi2name.py".
