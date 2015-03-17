@@ -9,7 +9,8 @@ Task:
   to be used instead of MOL2NAM, and place
   them into "dataset" subdir.
 Subtasks:
-  002 ROTTENMOL
+  002 ROTTENMOLFROMFILE
+  003 ROTTENMOLFROMSTDIN
 Comments:
   The programs should be platform specific
   binary executables, and the toolchain to
