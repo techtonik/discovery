@@ -16,7 +16,7 @@ Comments:
     1,3,7-trimethyl-3,7-dihydropurine-2,6-dione
   caffeine -> pnssrvar
 
-  $ 002rot13 caffeine.txt
+  $ rot13 caffeine.txt
   rot13 v1.0  String to ROT13 Conversion
   Wrap Labs Software, January 2015
 
