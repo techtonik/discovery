@@ -20,7 +20,8 @@ Its purpose is to:
 # [ ] pygame
 
 
-# --- helper Table class
+# --- helpers ---
+# ---   Table class
 # [x] initialization sets columns names
 # [x] method to add row
 # [x] method to find and update cell using lookup values
@@ -52,7 +53,17 @@ class Table(object):
         for r in self._rows:
             yield OrderedDict(zip(self._names, r))
 
-# --/ helper Table
+# --/   Table
+
+class Logger(object):
+    def log(self, msg):
+        print(msg)
+
+logger = Logger()
+log = logger.log
+
+# --- /helpers ---
+
 
 
 # Python should really have a Table data type
@@ -70,5 +81,8 @@ canvas = None
 detect_backends()
 for backend in BACKENDS:
     if backend['exists']:
+        log('init: using %s backend' % backend['name'])
+        backend['module'].init()
         canvas = backend['module'].get_canvas(320, 240)
+        break
 

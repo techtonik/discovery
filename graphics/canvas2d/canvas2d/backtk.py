@@ -1,14 +1,22 @@
-try:
-  import Tkinter
-except ImportError:
-  Tkinter = False
+
+# --- helpers ---
+
+import imp
+def module_importable(name):
+    try:
+        imp.find_module(name)
+        return True
+    except ImportError:
+        return False
 
 # --- plugin interface ---
 
 def exists():
-    if not Tkinter:
-        return False
-    return True
+    return module_importable('Tkinter')
+
+def init():
+    global Tkinter
+    import Tkinter
 
 # --- namespace for storing state ---
 
