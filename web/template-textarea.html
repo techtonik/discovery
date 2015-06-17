@@ -11,13 +11,30 @@
   </div>
 
   <script>
-/**
+  /**
 
-1. find textarea
-2. get contents
-3. check contents
-4. update status
-**/
+  1. find textarea
+  2. get contents
+  3. check contents
+  4. update status
+  **/
+
+  var log = console.log.bind(console); // just a debug helper
+
+  var container = document.getElementById('list-parser');
+  var textarea = container.getElementsByTagName('textarea')[0];
+  // status is reserved world, lost some 30 minutes here
+  var statusdiv = container.getElementsByTagName('div')[0];
+ 
+  function parse() {
+      statusdiv.innerHTML = textarea.value;
+  }
+  
+  parse();
+
+  // need to process keyup (keyboard)
+  // and probably onchange (mouse copypaste)
+
   </script>
 
 </body>
