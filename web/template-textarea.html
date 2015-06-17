@@ -27,13 +27,30 @@
   var statusdiv = container.getElementsByTagName('div')[0];
  
   function parse() {
-      statusdiv.innerHTML = textarea.value;
+      if (textarea.value.length == 0) {
+          toggleStatus();
+      } else {
+          // check if length of input is divisible by 2
+          if (textarea.value.length % 2 == 0) {
+              toggleStatus(true);
+          } else {
+              toggleStatus(false);
+          }
+      }
   }
-  
-  parse();
 
-  // need to process keyup (keyboard)
-  // and probably onchange (mouse copypaste)
+  function toggleStatus(value) {
+      if (value) {
+          statusdiv.innerHTML = "OK";
+      } else if (value === undefined) {
+          statusdiv.innerHTML = "";
+      } else {
+          statusdiv.innerHTML = "Error";
+      }
+  }
+
+  // add handler for events  
+  textarea.oninput = parse;
 
   </script>
 
