@@ -1,0 +1,36 @@
+﻿/* -- two column fluid layout */
+.content:before,
+.content:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+.content:after {
+    clear:both;
+}
+
+.canvas {
+    float: left;
+    margin-left: 2%;
+    border: 1px solid #AAA;
+}
+
+.graphtext {
+    float: left;
+    margin: auto 2%;
+    min-width: 20em;
+}
+/* /- two column fluid layout */
+
+.graphtext > textarea {
+    width: 100%;
+    margin: 0;
+}
+
+.status {
+    margin: 1em 4% auto 2%;
+    background-color: #fdd;
+}
+
+.footer {
+    text-align: center;
+}
