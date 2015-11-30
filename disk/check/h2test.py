@@ -3,6 +3,7 @@
 [ ] scan size of existing test data 
 [ ] handle OSError exception gracefully
 [ ] speed up and test writing - very slow
+  [ ] add mb/sec speed measurement
 
 [ ] random data doesn't match one produced by h2testw.exe
 """
@@ -21,6 +22,7 @@ gennum = endless_integers()
 from struct import pack, unpack
 import random
 import array
+import os
 
 # write files (each max 1Gb) until run out of space
 in1mb = 1024**2  # 1Mb
@@ -43,8 +45,7 @@ for fileno in gennum:
         random.seed(offset)
         binary = pack('<Q', offset)
         data.extend(unpack('8B', binary))
-        data.extend(pack((512-8)*'B', *[random.getrandbits(8)
-                                          for _ in range(512-8)]))
+        data.fromstring(os.urandom(512-8))
       print('---', 1+(offset//in1mb), '---')
       f.write(data.tostring())
   finally:
