@@ -229,7 +229,7 @@ pysdl2_version = sdl2.__version__
 sdl2_version = sdl2.SDL_version()
 sdl2.SDL_GetVersion(ctypes.byref(sdl2_version))
 
-print("Imported SDL2 %s with SDL %s.%s.%s" % (sdl2.__version__,
+print("Imported PySDL2 %s with SDL %s.%s.%s" % (sdl2.__version__,
   sdl2_version.major, sdl2_version.minor, sdl2_version.patch))
 print("Bootstrap complete.")
 
