@@ -158,6 +158,41 @@ def gradient(colors, n=256, wrapin=lib.Color):
 #
 # world of scenes
 #
+class CyclicWorld(object):
+  """world of scenes.
+
+     window is also part of the world, because it has
+     title that should be updated when scene changes"""
+
+  def __init__(self, items, window):
+    """every item is a scene"""
+    if not items:
+      raise ValueError("At least one element is required")
+    self.items = items
+    self.index = 0
+    self.window = window
+    self.fps = FPS()
+    self.cycle(0)       # call refresh for the first scene
+
+  def cycle(self, count=1):
+    """`count` is any amount and can be negative"""
+    self.index += count
+    if self.index < 0 or self.index > len(self.items)-1:
+      # modulo is a good operator for cycling in bounds
+      self.index = self.index % len(self.items)
+    self.scene = self.items[self.index]
+
+    self.window.title = self.scene.title
+
+    self.scene.switch()
+
+  def process(self):
+    self.scene.draw()
+    self.fps.process()
+
+
+# ------------------- define scenes ---
+
 # every scene is an algorithm that produces some effect
 
 class Scene(object):
@@ -367,37 +402,7 @@ class FirePlane(PixelPlane):
   #   bottom line, pixels are generated randomly
 
 
-class CyclicWorld(object):
-  """world of scenes.
-
-     window is also part of the world, because it has
-     title that should be updated when scene changes"""
-
-  def __init__(self, items, window):
-    """every item is a scene"""
-    if not items:
-      raise ValueError("At least one element is required")
-    self.items = items
-    self.index = 0
-    self.window = window
-    self.fps = FPS()
-    self.cycle(0)       # call refresh for the first scene
-
-  def cycle(self, count=1):
-    """`count` is any amount and can be negative"""
-    self.index += count
-    if self.index < 0 or self.index > len(self.items)-1:
-      # modulo is a good operator for cycling in bounds
-      self.index = self.index % len(self.items)
-    self.scene = self.items[self.index]
-
-    self.window.title = self.scene.title
-
-    self.scene.switch()
-
-  def process(self):
-    self.scene.draw()
-    self.fps.process()
+# ---------------- initialize world ---
 
 # generate some empty scenes
 names = ['Yo! Press Right to continue...']
@@ -417,10 +422,9 @@ scenes.append(PixelPlane(renderer))
 scenes.append(FirePlane(renderer))
 world = CyclicWorld(scenes, window)
 
-# --/ define world ---
 
 
-# --- main event (game) loop ---
+# ---------- main event (game) loop ---
 
 print(" .. LEFT/RIGHT cycle through scenes")
 print(" .. ESC quits")
@@ -444,7 +448,7 @@ while running:
       if e.key.keysym.sym == sdl2.SDLK_RIGHT:
         world.cycle(1)
 
-# /-- main event (game) loop ---
+# /--------- main event (game) loop ---
 
 
 lib.quit()  # /-- init ---
