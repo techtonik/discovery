@@ -37,9 +37,9 @@ FILESPEC = [
   ),
   dict(
     name='sdl2-win32',
-    filename='SDL2-2.0.3-win32-x86.zip',
-    hashsize='806a7f4890f598a7f2047d1fd36c3af13963e56f 396930',
-    url='http://www.libsdl.org/release/SDL2-2.0.3-win32-x86.zip',
+    filename='SDL2-2.0.4-win32-x86.zip',
+    hashsize='ae79e23874c14b911a2a1bf91f234fe17a8ffb1f 410598',
+    url='http://www.libsdl.org/release/SDL2-2.0.4-win32-x86.zip',
     checkpath='PySDL2/SDL2.dll'
   ),
   dict(
