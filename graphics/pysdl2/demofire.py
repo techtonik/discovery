@@ -199,6 +199,9 @@ class Scene(object):
   """scene knows about renderer and draws itself, it
      doesn't know anything about window (except size)"""
 
+  width = WIDTH
+  height = HEIGHT
+
   def __init__(self, renderer, title=None):
     """
     - renderer:  is a SDL2 renderer used for drawing
@@ -402,6 +405,59 @@ class FirePlane(PixelPlane):
   #   bottom line, pixels are generated randomly
 
 
+def linesin(line, piece, space):
+  """ given a line size, piece and space size
+      return number of pieces that will fit it and 
+      0-based starting position as a tuple"""
+
+  # [ ] test edge case - no pieces are fit
+  pieces, rem = divmod(line+space, piece+space)
+  if pieces == 0:
+    return (0, 0)
+  if rem == 0:
+    # pieces match line exacly without left and
+    # right borders, such as 10s10s10 == 32
+    # linesin(32, 10, 1) == (3, 0)
+    return pieces, rem
+  else:
+    return pieces, rem//2
+
+class GridBox(Scene):
+  def __init__(self, renderer, title=None):
+    Scene.__init__(self, renderer, title)
+    self.cubes = 0                 # cube counter
+    self.space = 3
+    # build a potential grid of cubes 10x10 with 1 space
+    self.rows, self.rowoffs = linesin(self.width, 10, self.space)   # cells, startpx
+    self.cols, self.coloffs = linesin(self.height, 10, self.space)  #
+    self.max = self.rows*self.cols
+
+    self.palette = [lib.Color(0,220,0), lib.Color(0,0,0)]
+    self.colidx = 0
+    self.color = self.palette[self.colidx]
+
+  def draw(self):
+    for i in range(self.cubes):
+      col, row = divmod(i, self.cols)
+      x = self.rowoffs+col*(10+self.space)
+      y = self.coloffs+row*(10+self.space)
+      renderer.fill([x,y,10,10], self.color)
+
+    renderer.present()
+
+    # [ ] recalculate in a separate on-demand method
+    self.cubes += 1
+    if self.cubes > self.max:
+      self.cubes = 0
+      self.colidx += 1
+      if self.colidx == len(self.palette):
+        self.colidx = 0
+      print self.colidx
+      self.color = self.palette[self.colidx]
+
+  def switch(self):
+    renderer.clear()
+
 # ---------------- initialize world ---
 
 # generate some empty scenes
@@ -420,6 +476,7 @@ scenes.append(SingleStepGradient(renderer))
 scenes.append(PalRotate(renderer))
 scenes.append(PixelPlane(renderer))
 scenes.append(FirePlane(renderer))
+scenes.append(GridBox(renderer))
 world = CyclicWorld(scenes, window)
 
 
