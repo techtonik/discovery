@@ -17,7 +17,7 @@ The code is placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 """
 
-__version__ = "1.5"
+__version__ = "1.6"
 
 try:
   import sdl2
@@ -50,7 +50,7 @@ print("---------------------------[ demofire %s ]---" % __version__)
 # /--
 
 
-# --- helpers ---
+# ------------------------- helpers ---
 
 import time
 
@@ -66,8 +66,18 @@ class Timer(object):
   def expired(self):
     return (time.time() > self.end)
 
+class FPS(object):
+  def __init__(self):
+    self.counter = 0
+    self.timer = Timer(1)
+  def process(self):
+    self.counter += 1
+    if self.timer.expired:
+      print("FPS: %s" % self.counter)
+      self.counter = 0
+      self.timer.restart()
 
-# --- init ---
+# ---------------------------- init ---
 
 import sdl2.ext as lib
 
@@ -82,7 +92,7 @@ window.show()
 renderer = lib.Renderer(window)
 
 
-# --- graphics helper functions ---
+# ------- graphics helper functions ---
 
 def vecsum(la, lb):
    """ (1,4,2) + (2,-1,1) == (3,3,3) """
@@ -144,11 +154,11 @@ def gradient(colors, n=256, wrapin=lib.Color):
 #print gradient([(9, 0, 0), (0, 0, 0), (18, 0, 0)], n=9)
 
 
-# --- define world ---
+# -------------------- define world ---
 #
 # world of scenes
 #
-# every scene is an algorithm that produces fire
+# every scene is an algorithm that produces some effect
 
 class Scene(object):
   """scene knows about renderer and draws itself, it
@@ -357,18 +367,6 @@ class FirePlane(PixelPlane):
   #   bottom line, pixels are generated randomly
 
 
-class FPS(object):
-  def __init__(self):
-    self.counter = 0
-    self.timer = Timer(1)
-  def process(self):
-    self.counter += 1
-    if self.timer.expired:
-      print "FPS: %s" % self.counter
-      self.counter = 0
-      self.timer.restart()
-
-
 class CyclicWorld(object):
   """world of scenes.
 
@@ -451,4 +449,4 @@ while running:
 
 lib.quit()  # /-- init ---
 
-print("---------[ techtonik // rainforce // 2014 ]---")
+print("----------------// rainforce // 2014-2016 //--")
