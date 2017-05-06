@@ -3,7 +3,7 @@ Gets plugin info from global fields
 
 Low-level Far Manager API is here:
 
- * https://api.farmanager.com/en/exported_functions/getglobalinfow.html
+ * https://api.farmanager.com/ru/exported_functions/getglobalinfow.html
   
 """
 
@@ -43,4 +43,5 @@ def GetPluginInfoW(info):
     info["Guid"] = getuuid(info["MenuString"])
 
 def OpenW(info):
+    """ Called by Far Manager when plugin is invoked  """
     print("[open] " + __file__)

@@ -16,7 +16,7 @@ copypasting.
 
 Low-level Far Manager API is here:
 
- * https://api.farmanager.com/en/exported_functions/getglobalinfow.html
+ * https://api.farmanager.com/ru/exported_functions/getglobalinfow.html
   
 """
 
