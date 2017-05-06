@@ -1,4 +1,4 @@
-https://gist.github.com/techtonik/9bfd6b3acac305ee64f2f4ec9ffffdfe
+https://github.com/techtonik/discovery/tree/master/interface/plugin/farmanager
 
 1. Download `pygin*.7z` from https://forum.farmanager.com/viewtopic.php?f=8&t=9998  
    (I tested with latest pygin_c080105_040517.7z)
