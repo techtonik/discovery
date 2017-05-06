@@ -28,7 +28,7 @@ def GetGlobalInfoW(info):
     info["Guid"] = "3117D11E-B9D8-4A9B-88C7-2D2983802C50"  # optional, but...
 
 def GetPluginInfoW(info):
-    info["MenuString"] = "blank00"
+    info["MenuString"] = "00blank"
     info["Guid"] = "4117257B-E011-4B5A-B5DC-732581BDF3B4"
 
 def OpenW(info):
