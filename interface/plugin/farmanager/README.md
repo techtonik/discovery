@@ -10,6 +10,10 @@ https://github.com/techtonik/discovery/tree/master/interface/plugin/farmanager
 
 Here is an example plugin. Feel free to copy and adapt.
 ```python
+"""
+Gets plugin info from global fields
+"""
+
 __title__ = "02fields"
 __author__ = "anatoly techtonik <techtonik@gmail.com>"
 __license__ = "Public Domain"
