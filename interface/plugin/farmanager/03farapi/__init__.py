@@ -1,15 +1,3 @@
-https://github.com/techtonik/discovery/tree/master/interface/plugin/farmanager
-
-1. Download `pygin*.7z` from https://forum.farmanager.com/viewtopic.php?f=8&t=9998  
-   (I tested with latest pygin_c080105_040517.7z)
-2. Unpack `pygin.dll` into Adapters/ subdir of your Far directory (%FARHOME%)
-3. Create your plugin in %FARHOME%/Plugins as Python package (dir with `__init__.py`)
-4. Restart, press F11 to see your plugin in the list, F3 to see more info
-5. If something goes wrong, check %TMP%/pygin.log for errors and output
-
-
-Here is an example plugin. Feel free to copy and adapt.
-```python
 """
 Get access to low-level Far API functions.
 
@@ -65,7 +53,3 @@ def OpenW(info):
     """ Called by Far Manager when plugin is invoked """
     print("[open] " + __file__)
     print("Available API:\n - " + "\n - ".join(dir(api)))
-```
-
-
- * [Far API reference](https://api.farmanager.com/ru/exported_functions/)
