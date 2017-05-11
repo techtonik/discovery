@@ -37,11 +37,8 @@ class FarPlugin:
     # --- callbacks for obligatory Far plugin interface
     # first call made by Far at initialization
     def get_global_info(self, info):
-        """ Set `pluginfo` fields for Far, see GetGlobalInfoW in Far API"""
-        info["Title"] = self.title             # should be set and non-empty
-        info["Author"] = self.author           # should be set and non-empty
-        info["Description"] = self.description # should be set
-        info["Guid"] = getuuid(info["Title"])
+        """ See GetGlobalInfoW """
+        pass
 
     # second call made by Far at init
     def set_startup_info(self, farapi):
@@ -62,6 +59,10 @@ class FarPlugin:
 def GetGlobalInfoW(info):
     """ Called 1st by Far Manager, plugin needs to fill the `info` """
     global plugin
+    info["Title"] = plugin.title             # should be set and non-empty
+    info["Author"] = plugin.author           # should be set and non-empty
+    info["Description"] = plugin.description # should be set
+    info["Guid"] = getuuid(plugin.title)
     plugin.get_global_info(info)
 
 def SetStartupInfoW(farapi):
