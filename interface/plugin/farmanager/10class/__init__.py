@@ -1,18 +1,3 @@
-https://github.com/techtonik/discovery/tree/master/interface/plugin/farmanager
-
-Note: Examples in 00xxx/ dirs are for previous versions of pygin API -
-      pygin_89f1868_090517.7z and below. They don't work with pygin_140517_6b26d5f.7z
-      and later.
-
-1. Download `pygin*.7z` from https://forum.farmanager.com/viewtopic.php?f=8&t=9998  
-2. Unpack `pygin.dll` into Adapters/ subdir of your Far directory (%FARHOME%)
-3. Create your plugin in %FARHOME%/Plugins as Python package (dir with `__init__.py`)
-4. Restart, press F11 to see your plugin in the list, F3 to see more info
-5. If something goes wrong, check %TMP%/pygin.log for errors and output
-
-
-Here is an example plugin. Feel free to copy and adapt.
-```python
 """
 Class-based Far API.
 
@@ -73,7 +58,3 @@ class FarPluginClass:
         print("API:  {}".format(self.farapi))
         print("info: {}".format(info))
         self.farapi.SetUserScreen()     # make panel buffer active
-```
-
-
- * [Far API reference](https://api.farmanager.com/ru/exported_functions/)
